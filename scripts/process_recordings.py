@@ -351,7 +351,11 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
 
     lecture_db_id = os.environ.get("NOTION_LECTURE_DB_ID", "").strip()
     task_db_id = os.environ.get("NOTION_TASK_DB_ID", "").strip()
-    parent_page_id = os.environ.get("NOTION_PARENT_PAGE_ID", "").strip()
+    parent_page_id = os.environ.get("NOTION_PARENT_PAGE_ID", "").strip() or "424c5c90104580a8a342d929114d2402"
+    if "notion." in parent_page_id:
+        m = re.search(r"([0-9a-fA-F]{32})", parent_page_id.replace("-", ""))
+        if m:
+            parent_page_id = m.group(1)
 
     # Build rich children blocks for the lecture page
     children: List[Dict[str, Any]] = [
