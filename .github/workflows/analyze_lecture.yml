@@ -6,6 +6,8 @@ on:
       - 'recordings/**'
       - '!recordings/.gitkeep'
       - '!recordings/processed/**'
+  schedule:
+    - cron: '*/15 * * * *'
   workflow_dispatch:
     inputs:
       file_path:
@@ -40,7 +42,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y ffmpeg
           pip install -r requirements.txt
 
-      - name: Run Lecture AI Analyzer & Notion/Calendar Sync
+      - name: Run Lecture AI Analyzer & Notion/Calendar Sync (Includes FolderSync Google Drive Pull)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -49,6 +51,7 @@ jobs:
           NOTION_PARENT_PAGE_ID: ${{ secrets.NOTION_PARENT_PAGE_ID }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
           TARGET_FILE_PATH: ${{ github.event.inputs.file_path }}
           OVERRIDE_COURSE_NAME: ${{ github.event.inputs.course_name }}
         run: |

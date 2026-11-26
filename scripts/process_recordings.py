@@ -639,6 +639,70 @@ def push_to_google_calendar(analysis: Dict[str, Any], notion_url: Optional[str])
         print(f"[WARN] Google Calendar direct push failed: {e}")
 
 
+def pull_from_google_drive(state: Dict[str, Any]) -> None:
+    """
+    If GOOGLE_DRIVE_FOLDER_ID is configured, pulls new audio recordings uploaded via Galaxy FolderSync
+    from Google Drive into `recordings/` (preserving course subfolder names if any).
+    Works with either GOOGLE_SERVICE_ACCOUNT_JSON or a public/shared Drive folder.
+    """
+    folder_id = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "").strip()
+    sa_json_str = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "").strip()
+    if not folder_id or not sa_json_str:
+        return
+
+    try:
+        import io
+        from google.oauth2 import service_account
+        from googleapiclient.discovery import build
+        from googleapiclient.http import MediaIoBaseDownload
+
+        sa_info = json.loads(sa_json_str)
+        creds = service_account.Credentials.from_service_account_info(
+            sa_info, scopes=["https://www.googleapis.com/auth/drive.readonly"]
+        )
+        drive_service = build("drive", "v3", credentials=creds)
+
+        downloaded_drive_ids = state.setdefault("processed_drive_ids", {})
+
+        def scan_drive_folder(parent_id: str, course_prefix: str = "") -> None:
+            query = f"'{parent_id}' in parents and trashed = false"
+            results = (
+                drive_service.files()
+                .list(q=query, fields="files(id, name, mimeType)", pageSize=100)
+                .execute()
+            )
+            for item in results.get("files", []):
+                f_id = item["id"]
+                f_name = item["name"]
+                f_mime = item.get("mimeType", "")
+
+                if f_mime == "application/vnd.google-apps.folder":
+                    scan_drive_folder(f_id, f_name)
+                else:
+                    ext = Path(f_name).suffix.lower()
+                    if ext in SUPPORTED_EXTENSIONS and f_id not in downloaded_drive_ids:
+                        target_dir = RECORDINGS_DIR / course_prefix if course_prefix else RECORDINGS_DIR
+                        target_dir.mkdir(parents=True, exist_ok=True)
+                        local_path = target_dir / f_name
+
+                        print(f"[INFO] Downloading new recording from Google Drive (FolderSync): {f_name}")
+                        request = drive_service.files().get_media(fileId=f_id)
+                        with io.FileIO(str(local_path), "wb") as fh:
+                            downloader = MediaIoBaseDownload(fh, request)
+                            done = False
+                            while not done:
+                                _, done = downloader.next_chunk()
+
+                        downloaded_drive_ids[f_id] = {
+                            "name": f_name,
+                            "downloaded_at": datetime.now(KST).isoformat(),
+                        }
+
+        scan_drive_folder(folder_id)
+    except Exception as e:
+        print(f"[WARN] Google Drive FolderSync pull skipped or failed: {e}")
+
+
 def find_unprocessed_files(state: Dict[str, Any], target_file: str = "") -> List[Path]:
     RECORDINGS_DIR.mkdir(parents=True, exist_ok=True)
     if target_file:
@@ -664,6 +728,7 @@ def main() -> None:
     target_file = os.environ.get("TARGET_FILE_PATH", "").strip()
     override_course = os.environ.get("OVERRIDE_COURSE_NAME", "").strip()
 
+    pull_from_google_drive(state)
     files = find_unprocessed_files(state, target_file)
     if not files:
         print("[INFO] No new unprocessed audio files found in recordings/.")
