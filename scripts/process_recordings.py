@@ -107,6 +107,8 @@ COURSE_ALIASES = {
     "아동운동재활": "아동운동재활학",
     "아동운동재활학": "아동운동재활학",
     "장애아동": "장애아동진단 및 평가",
+    "아동진단": "장애아동진단 및 평가",
+    "아진": "장애아동진단 및 평가",
     "진단및평가": "장애아동진단 및 평가",
     "장애아동진단": "장애아동진단 및 평가",
     "장애아동진단 및 평가": "장애아동진단 및 평가",
@@ -125,7 +127,8 @@ def normalize_course_name(raw_course: str) -> str:
         return "미분류 강좌"
     cleaned = raw_course.strip()
     key = re.sub(r"\s+", "", cleaned).lower()
-    for alias_key, official in COURSE_ALIASES.items():
+    # Check exact or longest alias match first
+    for alias_key, official in sorted(COURSE_ALIASES.items(), key=lambda x: len(x[0]), reverse=True):
         alias_norm = re.sub(r"\s+", "", alias_key).lower()
         if key == alias_norm or key.startswith(alias_norm) or alias_norm in key:
             return official
@@ -134,7 +137,7 @@ def normalize_course_name(raw_course: str) -> str:
 
 def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[str, str]:
     """
-    Infers course name and recording date from directory structure, filename prefix (e.g. ADL -> 일상생활활동),
+    Infers course name and recording date from directory structure, filename prefix (e.g. ADL -> 일상생활활동, 아진/아동 진단 -> 장애아동진단 및 평가),
     or timetable schedule.
     """
     rel_parts = file_path.relative_to(RECORDINGS_DIR).parts
@@ -159,22 +162,22 @@ def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[st
         if date_match_2:
             recorded_date = f"20{date_match_2.group(1)}-{date_match_2.group(2)}-{date_match_2.group(3)}"
 
-    # Try prefix pattern: [Course] Title, Course_Date, or "ADL 10" (Course Name + number)
+    # Try prefix pattern: [Course] Title, Course_Date, or "ADL 10", "아동 진단 5", "삼킴1" (Course Name + number)
     if not course:
         bracket_match = re.match(r"^\[([^\]]+)\]\s*(.*)$", stem)
         if bracket_match:
             course = bracket_match.group(1).strip()
             stem = bracket_match.group(2).strip() or stem
-        elif "_" in stem:
-            first_part = stem.split("_")[0].strip()
-            if not re.match(r"^(음성|녹음|Voice|Record|\d+)$", first_part, re.IGNORECASE):
-                course = first_part
         else:
-            space_num_match = re.match(r"^([A-Za-z가-힣]+)\s*[-_.]?\s*(\d+.*)$", stem)
-            if space_num_match:
-                first_word = space_num_match.group(1).strip()
+            prefix_num_match = re.match(r"^([A-Za-z가-힣\s]+?)\s*[-_.]?\s*(\d+.*)$", stem)
+            if prefix_num_match:
+                first_word = prefix_num_match.group(1).strip()
                 if not re.match(r"^(음성|녹음|Voice|Record|강의)$", first_word, re.IGNORECASE):
                     course = first_word
+            elif "_" in stem:
+                first_part = stem.split("_")[0].strip()
+                if not re.match(r"^(음성|녹음|Voice|Record|\d+)$", first_part, re.IGNORECASE):
+                    course = first_part
 
     course = normalize_course_name(course)
 
@@ -1164,6 +1167,26 @@ def ensure_local_course_folders() -> None:
             gitkeep_note.write_text(f"# {course} AI 강의 노트 폴더\n", encoding="utf-8")
 
 
+def commit_and_push_progress(msg: str) -> None:
+    """Commits and pushes state/notes incrementally inside GitHub Actions so progress is saved immediately."""
+    if not os.environ.get("GITHUB_ACTIONS"):
+        return
+    try:
+        import subprocess
+
+        subprocess.run(["git", "config", "user.name", "Lecture AI Bot"], check=False)
+        subprocess.run(["git", "config", "user.email", "actions@github.com"], check=False)
+        subprocess.run(["git", "add", "notes/", "docs/", "recordings/"], check=False)
+        diff_res = subprocess.run(["git", "diff", "--staged", "--quiet"], check=False)
+        if diff_res.returncode != 0:
+            subprocess.run(["git", "commit", "-m", f"{msg} [skip ci]"], check=False)
+            subprocess.run(["git", "pull", "--rebase", "-X", "ours", "origin", "main"], check=False)
+            subprocess.run(["git", "push"], check=False)
+            print(f"[INFO] Incrementally committed & pushed progress: {msg}")
+    except Exception as e:
+        print(f"[WARN] Incremental git push skipped: {e}")
+
+
 def main() -> None:
     state = load_state()
     target_file = os.environ.get("TARGET_FILE_PATH", "").strip()
@@ -1184,8 +1207,8 @@ def main() -> None:
     print(f"[INFO] Found {len(files)} new recording(s) to analyze.")
     newly_processed_dates = set()
 
-    for file_path in files:
-        print(f"\n==================== Processing: {file_path.name} ====================")
+    for idx_file, file_path in enumerate(files, 1):
+        print(f"\n==================== Processing [{idx_file}/{len(files)}]: {file_path.name} ====================")
         try:
             file_hash = compute_sha256(file_path)
             meta = parse_course_and_date(file_path, override_course)
@@ -1248,6 +1271,8 @@ def main() -> None:
             update_ics_calendar(state)
             save_state(state)
             cleanup_and_rename_existing_notion_pages()
+            if idx_file % 3 == 0:
+                commit_and_push_progress(f"🤖 Auto-save progress ({idx_file}/{len(files)} lectures)")
         except Exception as e:
             print(f"[ERROR] Failed to process {file_path.name}: {e}")
 
@@ -1264,6 +1289,7 @@ def main() -> None:
     cleanup_and_rename_existing_notion_pages()
     update_ics_calendar(state)
     save_state(state)
+    commit_and_push_progress("🤖 Auto-analyze lecture recordings & update calendar/notes")
     print("\n[SUCCESS] Batch processing finished!")
 
 
