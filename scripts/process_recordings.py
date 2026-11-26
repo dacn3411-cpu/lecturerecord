@@ -76,13 +76,65 @@ def compute_sha256(file_path: Path) -> str:
     return h.hexdigest()
 
 
+# 2026년 2학기 공식 시간표 강좌 목록 (고신대학교 작업치료학과 3학년)
+OFFICIAL_COURSES = [
+    "감각과인지재활",
+    "명작의 탄생",
+    "삼킴재활",
+    "일상생활활동",
+    "아동운동재활학",
+    "장애아동진단 및 평가",
+    "지역사회재활",
+    "사례기반 정신사회작업치료학",
+]
+
+COURSE_ALIASES = {
+    "adl": "일상생활활동",
+    "일상생활": "일상생활활동",
+    "일상생활활동": "일상생활활동",
+    "감각": "감각과인지재활",
+    "인지": "감각과인지재활",
+    "감각과인지": "감각과인지재활",
+    "감각과인지재활": "감각과인지재활",
+    "명작": "명작의 탄생",
+    "명작의탄생": "명작의 탄생",
+    "명작의 탄생": "명작의 탄생",
+    "삼킴": "삼킴재활",
+    "연하": "삼킴재활",
+    "삼킴재활": "삼킴재활",
+    "아동운동": "아동운동재활학",
+    "아동운동재활": "아동운동재활학",
+    "아동운동재활학": "아동운동재활학",
+    "장애아동": "장애아동진단 및 평가",
+    "진단및평가": "장애아동진단 및 평가",
+    "장애아동진단": "장애아동진단 및 평가",
+    "장애아동진단 및 평가": "장애아동진단 및 평가",
+    "지역사회": "지역사회재활",
+    "지사재": "지역사회재활",
+    "지역사회재활": "지역사회재활",
+    "사례기반": "사례기반 정신사회작업치료학",
+    "정신사회": "사례기반 정신사회작업치료학",
+    "정신": "사례기반 정신사회작업치료학",
+    "사례기반 정신사회작업치료학": "사례기반 정신사회작업치료학",
+}
+
+
+def normalize_course_name(raw_course: str) -> str:
+    if not raw_course:
+        return "미분류 강좌"
+    cleaned = raw_course.strip()
+    key = re.sub(r"\s+", "", cleaned).lower()
+    for alias_key, official in COURSE_ALIASES.items():
+        alias_norm = re.sub(r"\s+", "", alias_key).lower()
+        if key == alias_norm or key.startswith(alias_norm) or alias_norm in key:
+            return official
+    return cleaned
+
+
 def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[str, str]:
     """
-    Infers course name and recording date from directory structure or filename.
-    Supported patterns:
-    - recordings/< 강좌명 >/< 파일명 >.m4a
-    - recordings/[강좌명]_20261125_강의제목.m4a
-    - Samsung Voice Recorder: "음성 001.m4a", "음성 261125_143000.m4a", "자료구조_2026-11-25.m4a"
+    Infers course name and recording date from directory structure, filename prefix (e.g. ADL -> 일상생활활동),
+    or timetable schedule.
     """
     rel_parts = file_path.relative_to(RECORDINGS_DIR).parts
     course_from_dir = rel_parts[0] if len(rel_parts) > 1 and rel_parts[0] != "processed" else ""
@@ -101,11 +153,13 @@ def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[st
             if not re.match(r"^(음성|녹음|Voice|Record|\d+)$", first_part, re.IGNORECASE):
                 course = first_part
         else:
-            space_num_match = re.match(r"^([A-Za-z가-힣]+)\s+(\d+.*)$", stem)
+            space_num_match = re.match(r"^([A-Za-z가-힣]+)\s*[-_.]?\s*(\d+.*)$", stem)
             if space_num_match:
                 first_word = space_num_match.group(1).strip()
                 if not re.match(r"^(음성|녹음|Voice|Record|강의)$", first_word, re.IGNORECASE):
                     course = first_word
+
+    course = normalize_course_name(course)
 
     # Try extracting date from filename (YYYY-MM-DD, YYYYMMDD, YYMMDD)
     now_kst = datetime.now(KST)
@@ -161,8 +215,13 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
     if uploaded_file.state.name != "ACTIVE":
         raise RuntimeError(f"Gemini file upload failed with state: {uploaded_file.state.name}")
 
+    courses_list_str = ", ".join(OFFICIAL_COURSES)
     prompt = f"""
-당신은 대학 강의 및 전문 강좌 녹음을 완벽하게 분석하여 노트와 해야 할 일(Action Items)을 정리하는 AI 조교입니다.
+당신은 고신대학교 작업치료학과 3학년 강의 녹음을 완벽하게 분석하여 노트와 해야 할 일(Action Items)을 정리하는 AI 조교입니다.
+
+[2026년 2학기 수강 과목 목록 (반드시 아래 과목명 중 하나로 분류하세요)]
+{courses_list_str}
+(참고: ADL = 일상생활활동, 연하/삼킴 = 삼킴재활, 지사재 = 지역사회재활, 정신사회 = 사례기반 정신사회작업치료학)
 
 [기본 메타데이터]
 - 파일명: {file_path.name}
@@ -170,15 +229,15 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
 - 녹음 기준 날짜: {meta['date']} (상대적 날짜 계산 시 이 날짜를 기준으로 YYYY-MM-DD를 계산하세요. 예: '다음 주 수요일까지', '내일까지')
 
 오디오 전체를 주의 깊게 듣고 다음 JSON 스키마에 맞춰 한국어로 상세하고 정확하게 응답하세요:
-1. `course_name`: 추정 강좌명 설정이 '미분류 강좌'라면 강의 내용에서 과목명/강좌명을 추론하고, 이미 지정되어 있다면 그대로 유지하세요.
-2. `lecture_title`: 오늘 강의의 핵심 주제를 담은 명확한 제목
+1. `course_name`: 위 [2026년 2학기 수강 과목 목록] 중 가장 일치하는 공식 과목명을 정확히 선택하세요. 추정 강좌명이 이미 공식 과목명 중 하나라면 그대로 유지하세요.
+2. `lecture_title`: 오늘 강의의 핵심 주제를 담은 명확한 제목 (파일명에 주차나 번호가 있다면 포함, 예: "10주차 - ...")
 3. `summary_3lines`: 강의 전체 핵심 요약 (3~5문장)
 4. `detailed_notes`: 강의 흐름에 따른 섹션별 상세 필기 노트 (배열: 각 항목은 `section_title`, `content`, `timestamp_hint`)
-5. `exam_and_emphasis`: 교수님/강사가 "시험에 나온다", "중요하다", "꼭 기억해라"라고 강조한 포인트 목록 (배열)
+5. `exam_and_emphasis`: 교수님/강사가 "시험에 나온다", "중요하다", "국가시험(국시) 빈출이다", "꼭 기억해라"라고 강조한 포인트 목록 (배열)
 6. `key_terms`: 핵심 용어 및 개념 정의 (배열: 각 항목은 `term`, `definition`)
-7. `action_items`: 학생이 해야 할 일, 과제, 퀴즈, 시험 일정, 복습할 범위, 준비물 등 (배열).
+7. `action_items`: 학생이 해야 할 일, 과제, 실습 준비, 퀴즈, 시험 일정, 복습할 범위 등 (배열).
    - 각 항목은:
-     - `title`: 해야 할 일 제목 (예: "[자료구조] 3장 연습문제 과제 제출")
+     - `title`: 해야 할 일 제목 (예: "[일상생활활동] 10주차 과제 제출")
      - `category`: "과제" | "시험" | "퀴즈" | "복습/예습" | "기타" 중 택1
      - `priority`: "높음" | "보통" | "낮음"
      - `due_date`: 마감일/일정 날짜 (반드시 `YYYY-MM-DD` 형식. 강의에서 언급이 없으면 녹음일로부터 3일 뒤 날짜로 기본 지정하되 `is_exact_date`를 false로 설정)
@@ -251,27 +310,56 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
         ],
     }
 
-    candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.0-flash", "gemini-2.5-flash"]
+    candidate_models = [
+        "gemini-3.8-flash",
+        "gemini-3.8-flash-lite",
+        "gemini-3.5-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-pro",
+        "gemini-3.5-pro",
+    ]
+    try:
+        for m in client.models.list():
+            m_name = getattr(m, "name", "")
+            if m_name.startswith("models/"):
+                m_name = m_name[len("models/") :]
+            if "gemini-3" in m_name and ("flash" in m_name or "pro" in m_name) and "tts" not in m_name and "image" not in m_name:
+                if m_name not in candidate_models:
+                    candidate_models.append(m_name)
+        print(f"[INFO] Available Gemini 3 candidate models: {candidate_models}")
+    except Exception as e:
+        print(f"[WARN] Could not list models dynamically: {e}")
+
     result = None
     last_err = None
     try:
-        for model_name in candidate_models:
-            try:
-                print(f"[INFO] Running {model_name} audio analysis...")
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=[uploaded_file, prompt],
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        response_schema=response_schema,
-                        temperature=0.2,
-                    ),
-                )
-                result = json.loads(response.text)
+        for attempt in range(1, 4):
+            for model_name in candidate_models:
+                try:
+                    print(f"[INFO] Running {model_name} audio analysis (attempt {attempt})...")
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=[uploaded_file, prompt],
+                        config=types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            response_schema=response_schema,
+                            temperature=0.2,
+                        ),
+                    )
+                    result = json.loads(response.text)
+                    break
+                except Exception as err:
+                    last_err = err
+                    err_str = str(err)
+                    print(f"[WARN] Model {model_name} failed: {err_str[:220]}")
+                    if "404" in err_str or "NOT_FOUND" in err_str:
+                        continue
+                    time.sleep(4)
+            if result is not None:
                 break
-            except Exception as err:
-                last_err = err
-                print(f"[WARN] Model {model_name} failed: {err}")
+            print(f"[INFO] Waiting 10s before retry round {attempt + 1}...")
+            time.sleep(10)
+
         if result is None:
             raise RuntimeError(f"All Gemini models failed. Last error: {last_err}")
     finally:
@@ -282,6 +370,7 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
 
     if meta["course"] != "미분류 강좌":
         result["course_name"] = meta["course"]
+    result["course_name"] = normalize_course_name(result.get("course_name", ""))
     result["recorded_date"] = meta["date"]
     result["source_file"] = str(file_path.relative_to(ROOT_DIR))
     return result
@@ -345,6 +434,70 @@ def write_markdown_note(analysis: Dict[str, Any]) -> Path:
     md_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"[INFO] Saved Markdown lecture note: {md_path.relative_to(ROOT_DIR)}")
     return md_path
+
+
+def ensure_notion_course_folders() -> Dict[str, str]:
+    """
+    Ensures that all OFFICIAL_COURSES have a dedicated folder sub-page inside NOTION_PARENT_PAGE_ID.
+    Returns a dictionary mapping course_name -> notion_page_id.
+    """
+    token = os.environ.get("NOTION_TOKEN", "").strip()
+    if not token:
+        return {}
+
+    parent_page_id = os.environ.get("NOTION_PARENT_PAGE_ID", "").strip() or "424c5c90104580a8a342d929114d2402"
+    if "notion." in parent_page_id:
+        m = re.search(r"([0-9a-fA-F]{32})", parent_page_id.replace("-", ""))
+        if m:
+            parent_page_id = m.group(1)
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+    }
+
+    course_map: Dict[str, str] = {}
+    try:
+        blocks_resp = requests.get(
+            f"https://api.notion.com/v1/blocks/{parent_page_id}/children?page_size=100",
+            headers=headers,
+            timeout=20,
+        )
+        existing_subpages: Dict[str, str] = {}
+        if blocks_resp.ok:
+            for blk in blocks_resp.json().get("results", []):
+                if blk.get("type") == "child_page":
+                    cp_title = blk.get("child_page", {}).get("title", "")
+                    existing_subpages[cp_title] = blk["id"]
+
+        for course in OFFICIAL_COURSES:
+            matched_id = None
+            for title, pid in existing_subpages.items():
+                if course.lower() in title.lower():
+                    matched_id = pid
+                    break
+            if matched_id:
+                course_map[course] = matched_id
+            else:
+                folder_title = f"📂 [{course}] 강의 노트 폴더"
+                folder_payload = {
+                    "parent": {"page_id": parent_page_id},
+                    "icon": {"type": "emoji", "emoji": "📂"},
+                    "properties": {
+                        "title": {"title": [{"text": {"content": folder_title}}]},
+                    },
+                }
+                f_resp = requests.post(
+                    "https://api.notion.com/v1/pages", headers=headers, json=folder_payload, timeout=20
+                )
+                if f_resp.ok:
+                    course_map[course] = f_resp.json()["id"]
+                    print(f"[INFO] Pre-created Notion course folder: {folder_title}")
+    except Exception as e:
+        print(f"[WARN] ensure_notion_course_folders error: {e}")
+
+    return course_map
 
 
 def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
@@ -845,11 +998,28 @@ def find_unprocessed_files(state: Dict[str, Any], target_file: str = "") -> List
     return files
 
 
+def ensure_local_course_folders() -> None:
+    for course in OFFICIAL_COURSES:
+        safe_c = re.sub(r'[\\/*?:"<>|]', "_", course).strip()
+        c_rec_dir = RECORDINGS_DIR / safe_c
+        c_note_dir = NOTES_DIR / safe_c
+        c_rec_dir.mkdir(parents=True, exist_ok=True)
+        c_note_dir.mkdir(parents=True, exist_ok=True)
+        gitkeep_rec = c_rec_dir / ".gitkeep"
+        gitkeep_note = c_note_dir / ".gitkeep"
+        if not gitkeep_rec.exists():
+            gitkeep_rec.write_text(f"# {course} 강의 녹음 폴더\n", encoding="utf-8")
+        if not gitkeep_note.exists():
+            gitkeep_note.write_text(f"# {course} AI 강의 노트 폴더\n", encoding="utf-8")
+
+
 def main() -> None:
     state = load_state()
     target_file = os.environ.get("TARGET_FILE_PATH", "").strip()
     override_course = os.environ.get("OVERRIDE_COURSE_NAME", "").strip()
 
+    ensure_local_course_folders()
+    ensure_notion_course_folders()
     pull_from_google_drive(state)
     files = find_unprocessed_files(state, target_file)
     if not files:
@@ -862,64 +1032,70 @@ def main() -> None:
 
     for file_path in files:
         print(f"\n==================== Processing: {file_path.name} ====================")
-        file_hash = compute_sha256(file_path)
-        meta = parse_course_and_date(file_path, override_course)
-        analysis = analyze_audio_with_gemini(file_path, meta)
+        try:
+            file_hash = compute_sha256(file_path)
+            meta = parse_course_and_date(file_path, override_course)
+            analysis = analyze_audio_with_gemini(file_path, meta)
 
-        md_path = write_markdown_note(analysis)
-        notion_url = sync_to_notion(analysis)
-        push_to_google_calendar(analysis, notion_url)
+            md_path = write_markdown_note(analysis)
+            notion_url = sync_to_notion(analysis)
+            push_to_google_calendar(analysis, notion_url)
 
-        lecture_id = file_hash[:12]
-        lecture_entry = {
-            "id": lecture_id,
-            "course_name": analysis["course_name"],
-            "lecture_title": analysis["lecture_title"],
-            "recorded_date": analysis["recorded_date"],
-            "summary_3lines": analysis["summary_3lines"],
-            "exam_and_emphasis": analysis.get("exam_and_emphasis", []),
-            "key_terms": analysis.get("key_terms", []),
-            "detailed_notes": analysis.get("detailed_notes", []),
-            "note_path": str(md_path.relative_to(ROOT_DIR)),
-            "notion_url": notion_url,
-            "processed_at": datetime.now(KST).isoformat(),
-        }
-        state["lectures"].insert(0, lecture_entry)
-
-        for idx, item in enumerate(analysis.get("action_items", [])):
-            task_entry = {
-                "id": f"{lecture_id}_task_{idx}",
-                "lecture_id": lecture_id,
-                "course": analysis["course_name"],
+            lecture_id = file_hash[:12]
+            lecture_entry = {
+                "id": lecture_id,
+                "course_name": analysis["course_name"],
                 "lecture_title": analysis["lecture_title"],
-                "title": item["title"],
-                "category": item["category"],
-                "priority": item["priority"],
-                "due_date": item["due_date"],
-                "due_time": item.get("due_time", "23:59"),
-                "is_exact_date": item.get("is_exact_date", True),
-                "details": item.get("details", ""),
+                "recorded_date": analysis["recorded_date"],
+                "summary_3lines": analysis["summary_3lines"],
+                "exam_and_emphasis": analysis.get("exam_and_emphasis", []),
+                "key_terms": analysis.get("key_terms", []),
+                "detailed_notes": analysis.get("detailed_notes", []),
+                "note_path": str(md_path.relative_to(ROOT_DIR)),
                 "notion_url": notion_url,
-                "completed": False,
+                "processed_at": datetime.now(KST).isoformat(),
             }
-            state["tasks"].insert(0, task_entry)
+            state["lectures"].insert(0, lecture_entry)
 
-        state["processed_hashes"][file_hash] = {
-            "file": str(file_path.relative_to(ROOT_DIR)),
-            "processed_at": datetime.now(KST).isoformat(),
-            "lecture_id": lecture_id,
-        }
+            for idx, item in enumerate(analysis.get("action_items", [])):
+                task_entry = {
+                    "id": f"{lecture_id}_task_{idx}",
+                    "lecture_id": lecture_id,
+                    "course": analysis["course_name"],
+                    "lecture_title": analysis["lecture_title"],
+                    "title": item["title"],
+                    "category": item["category"],
+                    "priority": item["priority"],
+                    "due_date": item["due_date"],
+                    "due_time": item.get("due_time", "23:59"),
+                    "is_exact_date": item.get("is_exact_date", True),
+                    "details": item.get("details", ""),
+                    "notion_url": notion_url,
+                    "completed": False,
+                }
+                state["tasks"].insert(0, task_entry)
 
-        # Move processed recording to recordings/processed/<course>/ to keep folder clean
-        dest_dir = PROCESSED_DIR / re.sub(r'[\\/*?:"<>|]', "_", analysis["course_name"]).strip()
-        dest_dir.mkdir(parents=True, exist_ok=True)
-        dest_path = dest_dir / file_path.name
-        shutil.move(str(file_path), str(dest_path))
-        print(f"[INFO] Moved processed audio to {dest_path.relative_to(ROOT_DIR)}")
+            state["processed_hashes"][file_hash] = {
+                "file": str(file_path.relative_to(ROOT_DIR)),
+                "processed_at": datetime.now(KST).isoformat(),
+                "lecture_id": lecture_id,
+            }
+
+            # Move processed recording to recordings/processed/<course>/ to keep folder clean
+            dest_dir = PROCESSED_DIR / re.sub(r'[\\/*?:"<>|]', "_", analysis["course_name"]).strip()
+            dest_dir.mkdir(parents=True, exist_ok=True)
+            dest_path = dest_dir / file_path.name
+            shutil.move(str(file_path), str(dest_path))
+            print(f"[INFO] Moved processed audio to {dest_path.relative_to(ROOT_DIR)}")
+
+            update_ics_calendar(state)
+            save_state(state)
+        except Exception as e:
+            print(f"[ERROR] Failed to process {file_path.name}: {e}")
 
     update_ics_calendar(state)
     save_state(state)
-    print("\n[SUCCESS] All recordings processed and synced!")
+    print("\n[SUCCESS] Batch processing finished!")
 
 
 if __name__ == "__main__":

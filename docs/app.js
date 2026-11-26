@@ -13,7 +13,16 @@ const STORAGE_KEYS = {
   COURSES: 'lr_saved_courses',
 };
 
-const DEFAULT_COURSES = ['전공필수', '전공선택', '교양', '세미나'];
+const DEFAULT_COURSES = [
+  '일상생활활동',
+  '감각과인지재활',
+  '삼킴재활',
+  '아동운동재활학',
+  '장애아동진단 및 평가',
+  '지역사회재활',
+  '사례기반 정신사회작업치료학',
+  '명작의 탄생',
+];
 
 let uploadQueue = [];
 let mediaRecorder = null;
