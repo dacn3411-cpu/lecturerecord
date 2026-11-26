@@ -639,68 +639,149 @@ def push_to_google_calendar(analysis: Dict[str, Any], notion_url: Optional[str])
         print(f"[WARN] Google Calendar direct push failed: {e}")
 
 
+DEFAULT_GOOGLE_DRIVE_FOLDER_ID = "13fRGpU8zvRwdcdPt7SAk2hsLYiRrh-rE"
+
+
 def pull_from_google_drive(state: Dict[str, Any]) -> None:
     """
-    If GOOGLE_DRIVE_FOLDER_ID is configured, pulls new audio recordings uploaded via Galaxy FolderSync
-    from Google Drive into `recordings/` (preserving course subfolder names if any).
-    Works with either GOOGLE_SERVICE_ACCOUNT_JSON or a public/shared Drive folder.
+    Pulls new audio recordings uploaded via Galaxy FolderSync from Google Drive into `recordings/`.
+    Supports two modes:
+    1. Public/Shared Link Mode (Zero-config): Scrapes embeddedfolderview and downloads files directly using file IDs.
+    2. Service Account Mode (if GOOGLE_SERVICE_ACCOUNT_JSON is provided): Uses Google Drive API v3.
     """
-    folder_id = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "").strip()
+    folder_id = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "").strip() or DEFAULT_GOOGLE_DRIVE_FOLDER_ID
+    if "drive.google.com" in folder_id:
+        m = re.search(r"folders/([a-zA-Z0-9_-]+)", folder_id)
+        if m:
+            folder_id = m.group(1)
+
     sa_json_str = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "").strip()
-    if not folder_id or not sa_json_str:
-        return
+    downloaded_drive_ids = state.setdefault("processed_drive_ids", {})
 
-    try:
-        import io
-        from google.oauth2 import service_account
-        from googleapiclient.discovery import build
-        from googleapiclient.http import MediaIoBaseDownload
+    # Mode 1: Service Account API (if configured)
+    if sa_json_str:
+        try:
+            import io
+            from google.oauth2 import service_account
+            from googleapiclient.discovery import build
+            from googleapiclient.http import MediaIoBaseDownload
 
-        sa_info = json.loads(sa_json_str)
-        creds = service_account.Credentials.from_service_account_info(
-            sa_info, scopes=["https://www.googleapis.com/auth/drive.readonly"]
-        )
-        drive_service = build("drive", "v3", credentials=creds)
-
-        downloaded_drive_ids = state.setdefault("processed_drive_ids", {})
-
-        def scan_drive_folder(parent_id: str, course_prefix: str = "") -> None:
-            query = f"'{parent_id}' in parents and trashed = false"
-            results = (
-                drive_service.files()
-                .list(q=query, fields="files(id, name, mimeType)", pageSize=100)
-                .execute()
+            sa_info = json.loads(sa_json_str)
+            creds = service_account.Credentials.from_service_account_info(
+                sa_info, scopes=["https://www.googleapis.com/auth/drive.readonly"]
             )
-            for item in results.get("files", []):
-                f_id = item["id"]
-                f_name = item["name"]
-                f_mime = item.get("mimeType", "")
+            drive_service = build("drive", "v3", credentials=creds)
 
-                if f_mime == "application/vnd.google-apps.folder":
-                    scan_drive_folder(f_id, f_name)
-                else:
-                    ext = Path(f_name).suffix.lower()
-                    if ext in SUPPORTED_EXTENSIONS and f_id not in downloaded_drive_ids:
-                        target_dir = RECORDINGS_DIR / course_prefix if course_prefix else RECORDINGS_DIR
-                        target_dir.mkdir(parents=True, exist_ok=True)
-                        local_path = target_dir / f_name
+            def scan_drive_folder_api(parent_id: str, course_prefix: str = "") -> None:
+                query = f"'{parent_id}' in parents and trashed = false"
+                results = (
+                    drive_service.files()
+                    .list(q=query, fields="files(id, name, mimeType)", pageSize=100)
+                    .execute()
+                )
+                for item in results.get("files", []):
+                    f_id = item["id"]
+                    f_name = item["name"]
+                    f_mime = item.get("mimeType", "")
 
-                        print(f"[INFO] Downloading new recording from Google Drive (FolderSync): {f_name}")
-                        request = drive_service.files().get_media(fileId=f_id)
-                        with io.FileIO(str(local_path), "wb") as fh:
-                            downloader = MediaIoBaseDownload(fh, request)
-                            done = False
-                            while not done:
-                                _, done = downloader.next_chunk()
+                    if f_mime == "application/vnd.google-apps.folder":
+                        scan_drive_folder_api(f_id, f_name)
+                    else:
+                        ext = Path(f_name).suffix.lower()
+                        if ext in SUPPORTED_EXTENSIONS and f_id not in downloaded_drive_ids:
+                            target_dir = RECORDINGS_DIR / course_prefix if course_prefix else RECORDINGS_DIR
+                            target_dir.mkdir(parents=True, exist_ok=True)
+                            local_path = target_dir / f_name
 
-                        downloaded_drive_ids[f_id] = {
-                            "name": f_name,
-                            "downloaded_at": datetime.now(KST).isoformat(),
-                        }
+                            print(f"[INFO] Downloading new recording from Google Drive API: {f_name}")
+                            request = drive_service.files().get_media(fileId=f_id)
+                            with io.FileIO(str(local_path), "wb") as fh:
+                                downloader = MediaIoBaseDownload(fh, request)
+                                done = False
+                                while not done:
+                                    _, done = downloader.next_chunk()
 
-        scan_drive_folder(folder_id)
-    except Exception as e:
-        print(f"[WARN] Google Drive FolderSync pull skipped or failed: {e}")
+                            downloaded_drive_ids[f_id] = {
+                                "name": f_name,
+                                "downloaded_at": datetime.now(KST).isoformat(),
+                            }
+
+            scan_drive_folder_api(folder_id)
+            return
+        except Exception as e:
+            print(f"[WARN] Service Account Google Drive sync failed, falling back to public link mode: {e}")
+
+    # Mode 2: Zero-auth Public Shared Folder Mode
+    def scan_public_folder(current_folder_id: str, course_prefix: str = "") -> None:
+        embed_url = f"https://drive.google.com/embeddedfolderview?id={current_folder_id}#list"
+        try:
+            resp = requests.get(embed_url, timeout=20)
+            if not resp.ok:
+                print(f"[WARN] Could not access public Drive folder {current_folder_id}: HTTP {resp.status_code}")
+                return
+            html = resp.text
+        except Exception as e:
+            print(f"[WARN] Failed to fetch public Drive folder {current_folder_id}: {e}")
+            return
+
+        # Match each flip-entry block
+        entry_blocks = re.findall(
+            r'<div class="flip-entry" id="entry-([a-zA-Z0-9_-]+)"[^>]*>(.*?)</div></div></div>',
+            html,
+            re.S,
+        )
+        if not entry_blocks:
+            # Fallback broader pattern
+            entry_blocks = re.findall(
+                r'id="entry-([a-zA-Z0-9_-]+)".*?<div class="flip-entry-title">([^<]+)</div>',
+                html,
+                re.S,
+            )
+            for f_id, title in entry_blocks:
+                process_public_entry(f_id, title.strip(), "", course_prefix)
+            return
+
+        for f_id, block_html in entry_blocks:
+            title_m = re.search(r'<div class="flip-entry-title">([^<]+)</div>', block_html)
+            if not title_m:
+                continue
+            title = title_m.group(1).strip()
+            process_public_entry(f_id, title, block_html, course_prefix)
+
+    def process_public_entry(f_id: str, f_name: str, block_html: str, course_prefix: str) -> None:
+        if "drive.google.com/drive/folders/" in block_html or (not Path(f_name).suffix and "." not in f_name):
+            # It's a subfolder (e.g., course folder)
+            scan_public_folder(f_id, f_name)
+            return
+
+        ext = Path(f_name).suffix.lower()
+        if ext not in SUPPORTED_EXTENSIONS or f_id in downloaded_drive_ids:
+            return
+
+        target_dir = RECORDINGS_DIR / course_prefix if course_prefix else RECORDINGS_DIR
+        target_dir.mkdir(parents=True, exist_ok=True)
+        local_path = target_dir / f_name
+
+        print(f"[INFO] Downloading new recording from shared Google Drive folder: {f_name} (ID: {f_id})")
+        dl_url = f"https://drive.usercontent.google.com/download?id={f_id}&export=download&confirm=t"
+        try:
+            with requests.get(dl_url, stream=True, timeout=120) as r:
+                r.raise_for_status()
+                with open(local_path, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=65536):
+                        if chunk:
+                            f.write(chunk)
+            downloaded_drive_ids[f_id] = {
+                "name": f_name,
+                "course": course_prefix,
+                "downloaded_at": datetime.now(KST).isoformat(),
+            }
+            print(f"[INFO] Successfully downloaded {f_name} ({local_path.stat().st_size} bytes)")
+        except Exception as e:
+            print(f"[WARN] Failed to download file {f_name} ({f_id}): {e}")
+
+    print(f"[INFO] Checking shared Google Drive folder ({folder_id}) for new recordings...")
+    scan_public_folder(folder_id)
 
 
 def find_unprocessed_files(state: Dict[str, Any], target_file: str = "") -> List[Path]:
