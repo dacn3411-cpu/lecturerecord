@@ -188,6 +188,13 @@ def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[st
     }
 
 
+def ascii_safe_name(name: str) -> str:
+    """Percent-encode non-ASCII characters so the name is safe to send in HTTP headers."""
+    from urllib.parse import quote
+
+    return quote(name, safe=" ._-()[]")
+
+
 def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str, Any]:
     """
     Uploads the audio file to Gemini File API and requests structured JSON analysis:
@@ -209,10 +216,13 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
     mime_type = MIME_MAP.get(file_path.suffix.lower()) or mimetypes.guess_type(str(file_path))[0] or "audio/mp4"
 
     print(f"[INFO] Uploading {file_path.name} ({mime_type}) to Gemini File API...")
-    uploaded_file = client.files.upload(
-        file=str(file_path),
-        config=types.UploadFileConfig(mime_type=mime_type, display_name=file_path.name),
-    )
+    # Pass an open file object + ASCII display name: the SDK puts a str path into an
+    # HTTP header, which crashes with UnicodeEncodeError on Korean filenames.
+    with open(file_path, "rb") as audio_fh:
+        uploaded_file = client.files.upload(
+            file=audio_fh,
+            config=types.UploadFileConfig(mime_type=mime_type, display_name=ascii_safe_name(file_path.name)),
+        )
 
     # Wait until file state is ACTIVE
     while uploaded_file.state.name == "PROCESSING":
@@ -1024,7 +1034,7 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
                         scan_drive_folder_api(f_id, f_name)
                     else:
                         ext = Path(f_name).suffix.lower()
-                        if ext in SUPPORTED_EXTENSIONS and f_id not in downloaded_drive_ids:
+                        if ext in SUPPORTED_EXTENSIONS and not drive_file_is_done(downloaded_drive_ids, f_id):
                             target_dir = RECORDINGS_DIR / course_prefix if course_prefix else RECORDINGS_DIR
                             target_dir.mkdir(parents=True, exist_ok=True)
                             local_path = target_dir / f_name
@@ -1040,6 +1050,8 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
                             downloaded_drive_ids[f_id] = {
                                 "name": f_name,
                                 "downloaded_at": datetime.now(KST).isoformat(),
+                                "local_path": str(local_path.relative_to(ROOT_DIR)),
+                                "done": False,
                             }
 
             scan_drive_folder_api(folder_id)
@@ -1102,7 +1114,7 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
             return
 
         ext = Path(f_name).suffix.lower()
-        if ext not in SUPPORTED_EXTENSIONS or f_id in downloaded_drive_ids:
+        if ext not in SUPPORTED_EXTENSIONS or drive_file_is_done(downloaded_drive_ids, f_id):
             return
 
         try:
@@ -1117,6 +1129,8 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
         target_dir = RECORDINGS_DIR / course_prefix if course_prefix else RECORDINGS_DIR
         target_dir.mkdir(parents=True, exist_ok=True)
         local_path = target_dir / local_filename
+        if local_path.exists():
+            return  # already downloaded earlier in this run, waiting for analysis
 
         print(f"[INFO] Downloading new recording from shared Google Drive folder: {f_name} (Date: {mod_date_str}, ID: {f_id})")
         dl_url = f"https://drive.usercontent.google.com/download?id={f_id}&export=download&confirm=t"
@@ -1132,6 +1146,8 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
                 "recorded_date": mod_date_str,
                 "course": course_prefix,
                 "downloaded_at": datetime.now(KST).isoformat(),
+                "local_path": str(local_path.relative_to(ROOT_DIR)),
+                "done": False,  # set True only after successful analysis, so failures retry
             }
             print(f"[INFO] Successfully downloaded {local_filename} ({local_path.stat().st_size} bytes)")
         except Exception as e:
@@ -1139,6 +1155,20 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
 
     print(f"[INFO] Checking shared Google Drive folder ({folder_id}) for new recordings...")
     scan_public_folder(folder_id)
+
+
+def drive_file_is_done(drive_ids: Dict[str, Any], f_id: str) -> bool:
+    """True if this Drive file was already analyzed. Entries saved before the
+    `done` flag existed count as done (they were committed and processed earlier)."""
+    entry = drive_ids.get(f_id)
+    return entry is not None and entry.get("done", True)
+
+
+def mark_drive_file_done(state: Dict[str, Any], file_path: Path) -> None:
+    rel = str(file_path.relative_to(ROOT_DIR))
+    for entry in state.get("processed_drive_ids", {}).values():
+        if entry.get("local_path") == rel:
+            entry["done"] = True
 
 
 def find_unprocessed_files(state: Dict[str, Any], target_file: str = "") -> List[Path]:
@@ -1158,6 +1188,8 @@ def find_unprocessed_files(state: Dict[str, Any], target_file: str = "") -> List
             file_hash = compute_sha256(p)
             if file_hash not in state.get("processed_hashes", {}):
                 files.append(p)
+            else:
+                mark_drive_file_done(state, p)  # duplicate of an already analyzed recording
     return files
 
 
@@ -1185,7 +1217,9 @@ def commit_and_push_progress(msg: str) -> None:
 
         subprocess.run(["git", "config", "user.name", "Lecture AI Bot"], check=False)
         subprocess.run(["git", "config", "user.email", "actions@github.com"], check=False)
-        subprocess.run(["git", "add", "notes/", "docs/", "recordings/"], check=False)
+        # Audio is not committed: it already lives in Google Drive, and pushing GBs of
+        # recordings makes `git push` fail (HTTP 500), which also loses the saved state.
+        subprocess.run(["git", "add", "notes/", "docs/"], check=False)
         diff_res = subprocess.run(["git", "diff", "--staged", "--quiet"], check=False)
         if diff_res.returncode != 0:
             subprocess.run(["git", "commit", "-m", f"{msg} [skip ci]"], check=False)
@@ -1215,6 +1249,7 @@ def main() -> None:
 
     print(f"[INFO] Found {len(files)} new recording(s) to analyze.")
     newly_processed_dates = set()
+    failed_count = 0
 
     for idx_file, file_path in enumerate(files, 1):
         print(f"\n==================== Processing [{idx_file}/{len(files)}]: {file_path.name} ====================")
@@ -1269,6 +1304,7 @@ def main() -> None:
                 "processed_at": datetime.now(KST).isoformat(),
                 "lecture_id": lecture_id,
             }
+            mark_drive_file_done(state, file_path)
 
             # Move processed recording to recordings/processed/<course>/ to keep folder clean
             dest_dir = PROCESSED_DIR / re.sub(r'[\\/*?:"<>|]', "_", analysis["course_name"]).strip()
@@ -1283,7 +1319,8 @@ def main() -> None:
             if idx_file % 3 == 0:
                 commit_and_push_progress(f"🤖 Auto-save progress ({idx_file}/{len(files)} lectures)")
         except Exception as e:
-            print(f"[ERROR] Failed to process {file_path.name}: {e}")
+            failed_count += 1
+            print(f"[ERROR] Failed to process {file_path.name}: {type(e).__name__}: {e}")
 
     # Create or update the separate standalone Daily Core Study Article page for each date+course
     for c_name, r_date in sorted(newly_processed_dates):
@@ -1299,7 +1336,13 @@ def main() -> None:
     update_ics_calendar(state)
     save_state(state)
     commit_and_push_progress("🤖 Auto-analyze lecture recordings & update calendar/notes")
-    print("\n[SUCCESS] Batch processing finished!")
+    succeeded = len(files) - failed_count
+    print(f"\n[RESULT] {succeeded} succeeded, {failed_count} failed (of {len(files)})")
+    if failed_count and not succeeded:
+        # Every file failed: report the run as failed instead of a misleading success.
+        print("[ERROR] All recordings failed to process — see errors above.")
+        sys.exit(1)
+    print("[SUCCESS] Batch processing finished!")
 
 
 def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectures: List[Dict[str, Any]]) -> None:

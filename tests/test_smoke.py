@@ -85,5 +85,43 @@ class TestParseDriveModDate(unittest.TestCase):
         self.assertEqual(self.parse("<div>no date block</div>"), self.today)
 
 
+class TestKoreanFilenames(unittest.TestCase):
+    """Korean filenames once crashed the Gemini upload with UnicodeEncodeError (2026-11-26)."""
+
+    def test_ascii_safe_name(self):
+        fn = _load_function(MAIN_SCRIPT, "ascii_safe_name", {})
+        for name in ["2026-11-03_아동진단 4.m4a", "2026-11-26_사례기반 11.m4a", "ADL 1.m4a"]:
+            with self.subTest(name=name):
+                safe = fn(name)
+                safe.encode("ascii")  # must not raise
+                self.assertTrue(safe.endswith(".m4a"))
+        self.assertEqual(fn("ADL 1.m4a"), "ADL 1.m4a")
+
+    def test_upload_does_not_pass_str_path(self):
+        src = MAIN_SCRIPT.read_text(encoding="utf-8")
+        self.assertNotIn("file=str(file_path)", src)
+
+
+class TestDriveState(unittest.TestCase):
+    """A downloaded file must be retried until it is analyzed (audio is not committed to git)."""
+
+    def setUp(self):
+        self.root = Path("/repo")
+        ns = {"Path": Path, "ROOT_DIR": self.root, "Dict": dict, "Any": object}
+        self.is_done = _load_function(MAIN_SCRIPT, "drive_file_is_done", ns)
+        self.mark_done = _load_function(MAIN_SCRIPT, "mark_drive_file_done", ns)
+
+    def test_done_flag(self):
+        ids = {"legacy": {"name": "a"}, "new": {"name": "b", "done": False}}
+        self.assertTrue(self.is_done(ids, "legacy"))  # entries from before the flag
+        self.assertFalse(self.is_done(ids, "new"))  # downloaded but not analyzed -> retry
+        self.assertFalse(self.is_done(ids, "unknown"))
+
+    def test_mark_done(self):
+        state = {"processed_drive_ids": {"x": {"local_path": "recordings/a.m4a", "done": False}}}
+        self.mark_done(state, self.root / "recordings" / "a.m4a")
+        self.assertTrue(state["processed_drive_ids"]["x"]["done"])
+
+
 if __name__ == "__main__":
     unittest.main()
