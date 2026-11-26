@@ -6,11 +6,171 @@ METHOD:PUBLISH
 X-WR-CALNAME:🎓 강의 과제 & 시험 일정 (AI 자동정리)
 X-WR-TIMEZONE:Asia/Seoul
 BEGIN:VEVENT
+SUMMARY:[감각과인지재활] [감각과인지재활] 뇌 영역별 기
+ 능 및 손상 증상 암기
+DTSTART;TZID=Asia/Seoul:20261115T225900
+DTEND;TZID=Asia/Seoul:20261115T235900
+DTSTAMP:20261126T140610Z
+UID:3ef8eb37af75_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 감각과인지재활\n강의명: 11주차 - 인지 
+ 기능 평가 도구(NCS\, AMPS) 및 뇌 영역별 기능과 임상적 의
+ 의\n분류: 복습/예습 | 중요도: 보통\n세부사항: 전두엽\, 
+ 두정엽\, 측두엽\, 후두엽의 주요 기능과 손상 시 증상을
+  표로 정리하여 암기할 것.\n노션 노트: https://app.notion.com
+ /p/11-08-11-NCS-AMPS-424c5c901045817fabfcfb92d219214d
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [감각과인지재활] [감각과인지재
+ 활] 뇌 영역별 기능 및 손상 증상 암기
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [감각과인지재활] [감각과인지재
+ 활] 뇌 영역별 기능 및 손상 증상 암기
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[감각과인지재활] [감각과인지재활] NCSA 및 AMPS 평
+ 가 도구 비교 정리 과제
+DTSTART;TZID=Asia/Seoul:20261111T225900
+DTEND;TZID=Asia/Seoul:20261111T235900
+DTSTAMP:20261126T140610Z
+UID:3ef8eb37af75_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 감각과인지재활\n강의명: 11주차 - 인지 
+ 기능 평가 도구(NCS\, AMPS) 및 뇌 영역별 기능과 임상적 의
+ 의\n분류: 과제 | 중요도: 높음\n세부사항: NCSA와 AMPS의 목
+ 적\, 평가 항목\, 임상적 장단점을 비교하여 A4 1장 분량
+ 으로 정리하여 제출할 것.\n노션 노트: https://app.notion.com/
+ p/11-08-11-NCS-AMPS-424c5c901045817fabfcfb92d219214d
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [감각과인지재활] [감각과인지재
+ 활] NCSA 및 AMPS 평가 도구 비교 정리 과제
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [감각과인지재활] [감각과인지재
+ 활] NCSA 및 AMPS 평가 도구 비교 정리 과제
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[지역사회재활] [지역사회재활] 가족 중심 중재 사
+ 례 분석 과제 준비
+DTSTART;TZID=Asia/Seoul:20261111T170000
+DTEND;TZID=Asia/Seoul:20261111T180000
+DTSTAMP:20261126T140610Z
+UID:7bc2a566bfa7_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 지역사회재활\n강의명: 지역사회재활 4주
+ 차 - 청소년기 및 성인기 장애인의 삶과 지역사회 작업
+ 치료 중재 전략\n분류: 과제 | 중요도: 보통\n세부사항: 
+ 성인기 장애인의 부모 양육 태도가 자립에 미치는 영향
+ 에 대한 임상 사례를 바탕으로 개입 전략 작성하기.\n노
+ 션 노트: https://app.notion.com/p/11-04-4-4-424c5c90104581629f40f619286
+ 9fef3
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [지역사회재활] [지역사회재활] 
+ 가족 중심 중재 사례 분석 과제 준비
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [지역사회재활] [지역사회재활] 
+ 가족 중심 중재 사례 분석 과제 준비
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[지역사회재활] [지역사회재활] 4주차 강의 핵심 
+ 노트 요약 및 복습
+DTSTART;TZID=Asia/Seoul:20261107T225900
+DTEND;TZID=Asia/Seoul:20261107T235900
+DTSTAMP:20261126T140610Z
+UID:7bc2a566bfa7_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 지역사회재활\n강의명: 지역사회재활 4주
+ 차 - 청소년기 및 성인기 장애인의 삶과 지역사회 작업
+ 치료 중재 전략\n분류: 복습/예습 | 중요도: 높음\n세부사
+ 항: 청소년 및 성인기 전환기 재활의 개념과 부모 과잉
+ 보호의 문제점을 정리하고 심화 아티클 정독하기.\n노션
+  노트: https://app.notion.com/p/11-04-4-4-424c5c90104581629f40f6192869fe
+ f3
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [지역사회재활] [지역사회재활] 4
+ 주차 강의 핵심 노트 요약 및 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [지역사회재활] [지역사회재활] 4
+ 주차 강의 핵심 노트 요약 및 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[지역사회재활] [지역사회재활] 아동 및 청소년 작
+ 업치료 관련 해외 선진 사례 조사 과제 준비
+DTSTART;TZID=Asia/Seoul:20261111T170000
+DTEND;TZID=Asia/Seoul:20261111T180000
+DTSTAMP:20261126T140610Z
+UID:45362fc25272_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 지역사회재활\n강의명: 아동 작업치료의 
+ 지역사회 통합 및 대상자별 작업치료 중재 전략\n분류: 
+ 과제 | 중요도: 보통\n세부사항: 미국 및 선진국의 학교 
+ 연계 작업치료 및 지역사회 전환 프로그램 운영 사례를 
+ 조사하여 요약 보고서 작성.\n노션 노트: https://app.notion.c
+ om/p/11-04-3-424c5c901045818089f9e7a0e9c451d3
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [지역사회재활] [지역사회재활] 
+ 아동 및 청소년 작업치료 관련 해외 선진 사례 조사 과
+ 제 준비
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [지역사회재활] [지역사회재활] 
+ 아동 및 청소년 작업치료 관련 해외 선진 사례 조사 과
+ 제 준비
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[지역사회재활] [지역사회재활] 10주차 강의 아동 
+ 작업치료 및 전환 서비스 사례 복습
+DTSTART;TZID=Asia/Seoul:20261107T225900
+DTEND;TZID=Asia/Seoul:20261107T235900
+DTSTAMP:20261126T140610Z
+UID:45362fc25272_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 지역사회재활\n강의명: 아동 작업치료의 
+ 지역사회 통합 및 대상자별 작업치료 중재 전략\n분류: 
+ 복습/예습 | 중요도: 높음\n세부사항: 강의 노트와 심화 
+ 아티클을 정독하며 감각통합과 학령기 아동의 학습 연
+ 계성\, 청소년기 전환 서비스의 개념을 정리할 것.\n노션
+  노트: https://app.notion.com/p/11-04-3-424c5c901045818089f9e7a0e9c451d3
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [지역사회재활] [지역사회재활] 1
+ 0주차 강의 아동 작업치료 및 전환 서비스 사례 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [지역사회재활] [지역사회재활] 10
+ 주차 강의 아동 작업치료 및 전환 서비스 사례 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
 SUMMARY:[사례기반 정신사회작업치료학] [복습] 정신사회
  작업치료 평가 도구 정리
 DTSTART;TZID=Asia/Seoul:20261107T225900
 DTEND;TZID=Asia/Seoul:20261107T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:0ebe5277d573_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 사례기반 정신사회작업치료학\n강의명: 1
  0주차 - 정신사회작업치료 평가 도구: Occupational Questionnai
@@ -37,7 +197,7 @@ SUMMARY:[사례기반 정신사회작업치료학] [과제] OQ 및 RC 평
  가 도구 실습지 작성
 DTSTART;TZID=Asia/Seoul:20261107T225900
 DTEND;TZID=Asia/Seoul:20261107T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:0ebe5277d573_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 사례기반 정신사회작업치료학\n강의명: 1
  0주차 - 정신사회작업치료 평가 도구: Occupational Questionnai
@@ -64,7 +224,7 @@ SUMMARY:[사례기반 정신사회작업치료학] 발달 단계별 작업
   수행 분석 과제
 DTSTART;TZID=Asia/Seoul:20261107T225900
 DTEND;TZID=Asia/Seoul:20261107T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:eef1e721b32a_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 사례기반 정신사회작업치료학\n강의명: 
  발달 이론과 작업 수행: 발달 단계에 따른 작업적 발달
@@ -91,7 +251,7 @@ SUMMARY:[사례기반 정신사회작업치료학] [행정 주의사항]
  감염 관련 서류 확인 및 학과 문의 절차 숙지
 DTSTART;TZID=Asia/Seoul:20261106T170000
 DTEND;TZID=Asia/Seoul:20261106T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d801007b6378_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 사례기반 정신사회작업치료학\n강의명: 1
  0주차 - MOHO(인간작업모델)의 이론적 구조와 임상 사례 
@@ -121,7 +281,7 @@ SUMMARY:[사례기반 정신사회작업치료학] [사례기반 정신사
  ) 모델 예제 풀이
 DTSTART;TZID=Asia/Seoul:20261110T225900
 DTEND;TZID=Asia/Seoul:20261110T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d801007b6378_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 사례기반 정신사회작업치료학\n강의명: 1
  0주차 - MOHO(인간작업모델)의 이론적 구조와 임상 사례 
@@ -151,7 +311,7 @@ SUMMARY:[사례기반 정신사회작업치료학] [사례기반 정신사
  복습
 DTSTART;TZID=Asia/Seoul:20261107T225900
 DTEND;TZID=Asia/Seoul:20261107T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d801007b6378_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 사례기반 정신사회작업치료학\n강의명: 1
  0주차 - MOHO(인간작업모델)의 이론적 구조와 임상 사례 
@@ -180,7 +340,7 @@ SUMMARY:[장애아동진단 및 평가] [과제] 4주차 강의록 요약
  및 사례 분석
 DTSTART;TZID=Asia/Seoul:20261110T080000
 DTEND;TZID=Asia/Seoul:20261110T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:38d37019bed7_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 4주차 - 
  아동 발달 단계별 계단 오르기 및 내려오기 평가와 중재
@@ -206,7 +366,7 @@ SUMMARY:[장애아동진단 및 평가] [복습] 계단 오르내리기
  발달 단계 표 정리
 DTSTART;TZID=Asia/Seoul:20261106T225900
 DTEND;TZID=Asia/Seoul:20261106T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:38d37019bed7_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 4주차 - 
  아동 발달 단계별 계단 오르기 및 내려오기 평가와 중재
@@ -231,7 +391,7 @@ BEGIN:VEVENT
 SUMMARY:[아동운동재활학] 10주차 강의 내용 복습
 DTSTART;TZID=Asia/Seoul:20261106T225900
 DTEND;TZID=Asia/Seoul:20261106T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:a7c256077254_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 아동운동재활학\n강의명: 10주차 - 아동 
  운동 재활을 위한 시지각 게임 앱 활용 및 과제 점검\n분
@@ -257,7 +417,7 @@ SUMMARY:[아동운동재활학] 아동 재활용 시지각 게임 앱 3개
   선정 및 분석
 DTSTART;TZID=Asia/Seoul:20261118T080000
 DTEND;TZID=Asia/Seoul:20261118T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:a7c256077254_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 아동운동재활학\n강의명: 10주차 - 아동 
  운동 재활을 위한 시지각 게임 앱 활용 및 과제 점검\n분
@@ -284,7 +444,7 @@ SUMMARY:[장애아동진단 및 평가] 운동 발달 평가 점수 산정
   기준 정리
 DTSTART;TZID=Asia/Seoul:20261106T225900
 DTEND;TZID=Asia/Seoul:20261106T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:1b7e6681663b_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 6주차 - 
  아동 운동 발달 평가 및 공 던지기 중재 전략\n분류: 과
@@ -309,7 +469,7 @@ SUMMARY:[장애아동진단 및 평가] 공 던지기 연령별 기준표
  암기 및 복습
 DTSTART;TZID=Asia/Seoul:20261106T225900
 DTEND;TZID=Asia/Seoul:20261106T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:1b7e6681663b_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 6주차 - 
  아동 운동 발달 평가 및 공 던지기 중재 전략\n분류: 복
@@ -336,7 +496,7 @@ SUMMARY:[장애아동진단 및 평가] [장애아동진단 및 평가]
  오답 노트 작성
 DTSTART;TZID=Asia/Seoul:20261110T080000
 DTEND;TZID=Asia/Seoul:20261110T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d92d4a46f2ae_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 10주차 - 
  아동 대운동 평가 도구 문항별 채점 기준 및 발달적 이
@@ -366,7 +526,7 @@ SUMMARY:[장애아동진단 및 평가] [장애아동진단 및 평가]
  대비
 DTSTART;TZID=Asia/Seoul:20261106T225900
 DTEND;TZID=Asia/Seoul:20261106T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d92d4a46f2ae_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 10주차 - 
  아동 대운동 평가 도구 문항별 채점 기준 및 발달적 이
@@ -396,7 +556,7 @@ SUMMARY:[장애아동진단 및 평가] [장애아동진단 및 평가]
  약
 DTSTART;TZID=Asia/Seoul:20261106T225900
 DTEND;TZID=Asia/Seoul:20261106T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d92d4a46f2ae_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 10주차 - 
  아동 대운동 평가 도구 문항별 채점 기준 및 발달적 이
@@ -426,7 +586,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 보상적 기법 금기증 정리
  과제
 DTSTART;TZID=Asia/Seoul:20261105T225900
 DTEND;TZID=Asia/Seoul:20261105T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:43bc6085e5aa_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴재활 4주차 - 성문
   위 기법(Supraglottic Swallow) 및 보상적 기법\n분류: 과제 | 
@@ -452,7 +612,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 성문 위 기법 4단계 순서 암
  기 및 실습
 DTSTART;TZID=Asia/Seoul:20261105T080000
 DTEND;TZID=Asia/Seoul:20261105T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:43bc6085e5aa_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴재활 4주차 - 성문
   위 기법(Supraglottic Swallow) 및 보상적 기법\n분류: 복습/예
@@ -478,7 +638,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 질환별(뇌졸중 vs 두경부암)
   삼킴 장애 중재 전략 비교 과제
 DTSTART;TZID=Asia/Seoul:20261109T225900
 DTEND;TZID=Asia/Seoul:20261109T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:66dd5b4de599_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴 3\n분류: 과제 | 
  중요도: 높음\n세부사항: 뇌졸중 환자와 두경부암 환자
@@ -504,7 +664,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 특수 연하 기법(슈프 연하
  법) 단계별 프로토콜 숙지
 DTSTART;TZID=Asia/Seoul:20261107T170000
 DTEND;TZID=Asia/Seoul:20261107T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:66dd5b4de599_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴 3\n분류: 복습/예
  습 | 중요도: 보통\n세부사항: 슈프 연하법과 슈퍼 슈프 
@@ -530,7 +690,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 10주차 교정적 vs 보상적 접
  근법 비교 정리 및 복습
 DTSTART;TZID=Asia/Seoul:20261105T225900
 DTEND;TZID=Asia/Seoul:20261105T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:66dd5b4de599_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴 3\n분류: 복습/예
  습 | 중요도: 높음\n세부사항: 오늘 강의에서 다룬 교정
@@ -556,7 +716,7 @@ SUMMARY:[감각과인지재활] 전두엽 손상 환자 사례 연구 복
  습
 DTSTART;TZID=Asia/Seoul:20261104T080000
 DTEND;TZID=Asia/Seoul:20261104T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:eb5b7bb6233e_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 감각과인지재활\n강의명: 고위 인지 기능
  의 평가와 실행 기능(Executive Function)의 신경학적 기전\n
@@ -582,7 +742,7 @@ SUMMARY:[감각과인지재활] 실행 기능 평가 도구(Trail Making T
  est) 실습지 작성
 DTSTART;TZID=Asia/Seoul:20261104T225900
 DTEND;TZID=Asia/Seoul:20261104T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:eb5b7bb6233e_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 감각과인지재활\n강의명: 고위 인지 기능
  의 평가와 실행 기능(Executive Function)의 신경학적 기전\n
@@ -608,7 +768,7 @@ SUMMARY:[감각과인지재활] [감각과인지재활] 편측 무시 평
  가도구 4종 및 MVPT 특징 복습
 DTSTART;TZID=Asia/Seoul:20261104T225900
 DTEND;TZID=Asia/Seoul:20261104T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:0aef852a11aa_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 감각과인지재활\n강의명: 10주차 - 시지각
   재활: 시공간 지각 평가 및 편측 무시(Unilateral Neglect) 평
@@ -636,7 +796,7 @@ SUMMARY:[감각과인지재활] [실습 준비] 예방접종 증명서 및
   임상실습 제출 서류 준비
 DTSTART;TZID=Asia/Seoul:20261104T160000
 DTEND;TZID=Asia/Seoul:20261104T170000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:0aef852a11aa_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 감각과인지재활\n강의명: 10주차 - 시지각
   재활: 시공간 지각 평가 및 편측 무시(Unilateral Neglect) 평
@@ -663,7 +823,7 @@ SUMMARY:[감각과인지재활] [임상실습] 3학년 임상실습 배정
   최종 공고 확인
 DTSTART;TZID=Asia/Seoul:20261102T130000
 DTEND;TZID=Asia/Seoul:20261102T140000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:0aef852a11aa_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 감각과인지재활\n강의명: 10주차 - 시지각
   재활: 시공간 지각 평가 및 편측 무시(Unilateral Neglect) 평
@@ -690,7 +850,7 @@ SUMMARY:[지역사회재활] 임상실습 희망 기관(병원 vs 아동
  센터) 사전 조사 및 분석
 DTSTART;TZID=Asia/Seoul:20261111T225900
 DTEND;TZID=Asia/Seoul:20261111T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:7d32a120fe97_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 지역사회재활\n강의명: 중간고사 피드백
  \, 임상실습 기관별 특성 분석 및 아동 지역사회 작업치
@@ -717,7 +877,7 @@ SUMMARY:[지역사회재활] 지역사회재활 '아동 지역사회 작
  업치료' 단원 복습
 DTSTART;TZID=Asia/Seoul:20261104T225900
 DTEND;TZID=Asia/Seoul:20261104T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:7d32a120fe97_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 지역사회재활\n강의명: 중간고사 피드백
  \, 임상실습 기관별 특성 분석 및 아동 지역사회 작업치
@@ -743,7 +903,7 @@ SUMMARY:[지역사회재활] 교수님 대면 상담 신청 (학습법 및
   성적 고민 학생 대상)
 DTSTART;TZID=Asia/Seoul:20261031T160000
 DTEND;TZID=Asia/Seoul:20261031T170000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:7d32a120fe97_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 지역사회재활\n강의명: 중간고사 피드백
  \, 임상실습 기관별 특성 분석 및 아동 지역사회 작업치
@@ -770,7 +930,7 @@ SUMMARY:[지역사회재활] [지역사회재활] 1주차 강의록 및
  핵심 용어 복습
 DTSTART;TZID=Asia/Seoul:20261031T170000
 DTEND;TZID=Asia/Seoul:20261031T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:0259967105f6_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 지역사회재활\n강의명: 지역사회재활 1주
  차 - 지역사회중심재활(CBR) 운영 예시 및 사업계획서 작
@@ -797,7 +957,7 @@ SUMMARY:[지역사회재활] [지역사회재활] 조별 사업계획서
  초안 작성 및 제출
 DTSTART;TZID=Asia/Seoul:20261031T225900
 DTEND;TZID=Asia/Seoul:20261031T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:0259967105f6_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 지역사회재활\n강의명: 지역사회재활 1주
  차 - 지역사회중심재활(CBR) 운영 예시 및 사업계획서 작
@@ -825,7 +985,7 @@ SUMMARY:[장애아동진단 및 평가] [과제] 아동 운동 발달 평
  가 프로토콜 요약노트 작성
 DTSTART;TZID=Asia/Seoul:20261103T170000
 DTEND;TZID=Asia/Seoul:20261103T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:115612e303ad_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 아동운동
  재활학 및 장애아동진단 평가 3주차\n분류: 과제 | 중요
@@ -850,7 +1010,7 @@ SUMMARY:[장애아동진단 및 평가] [장애아동진단 및 평가] 3
  주차 강의 내용 복습 및 0~2점 채점 기준 암기
 DTSTART;TZID=Asia/Seoul:20261030T225900
 DTEND;TZID=Asia/Seoul:20261030T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:115612e303ad_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 아동운동
  재활학 및 장애아동진단 평가 3주차\n분류: 복습/예습 | 
@@ -878,7 +1038,7 @@ SUMMARY:[장애아동진단 및 평가] 10주차 강의 복습 및 평가
  기준 암기
 DTSTART;TZID=Asia/Seoul:20261030T225900
 DTEND;TZID=Asia/Seoul:20261030T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:fc39f6503010_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 아동 발
  달 평가 및 자세 조절을 위한 작업치료 중재 전략\n분류:
@@ -904,7 +1064,7 @@ SUMMARY:[장애아동진단 및 평가] PDMS-2 레코드 폼(Record Form)
  양식 및 프로파일 페이지 구조 숙지
 DTSTART;TZID=Asia/Seoul:20261030T225900
 DTEND;TZID=Asia/Seoul:20261030T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:639dc0a3ecb0_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 피바디 
  발달 운동 척도 2판(PDMS-2) 평가 도구의 구성 및 지침\n분
@@ -930,7 +1090,7 @@ SUMMARY:[장애아동진단 및 평가] PDMS-2 지침서 내 하위 검사
  별 시작 지점 및 채점 규칙 복습
 DTSTART;TZID=Asia/Seoul:20261030T225900
 DTEND;TZID=Asia/Seoul:20261030T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:639dc0a3ecb0_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 장애아동진단 및 평가\n강의명: 피바디 
  발달 운동 척도 2판(PDMS-2) 평가 도구의 구성 및 지침\n분
@@ -955,7 +1115,7 @@ BEGIN:VEVENT
 SUMMARY:[삼킴재활] [삼킴재활] 다음 주 실습 준비
 DTSTART;TZID=Asia/Seoul:20261102T080000
 DTEND;TZID=Asia/Seoul:20261102T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:c7d321f34124_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴재활 2주차 - NG 튜
  브의 임상적 적용과 관리\n분류: 기타 | 중요도: 보통\n세
@@ -981,7 +1141,7 @@ SUMMARY:[삼킴재활] [삼킴재활] NG 튜브 관리 가이드라인 복
  습
 DTSTART;TZID=Asia/Seoul:20261029T225900
 DTEND;TZID=Asia/Seoul:20261029T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:c7d321f34124_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴재활 2주차 - NG 튜
  브의 임상적 적용과 관리\n분류: 복습/예습 | 중요도: 높
@@ -1007,7 +1167,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 비구강 영양(N-tube\, PEG) 환
  자 위닝(Weaning) 절차 조사
 DTSTART;TZID=Asia/Seoul:20261029T225900
 DTEND;TZID=Asia/Seoul:20261029T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e58e0d6724f7_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴 장애의 치료 기
  법과 임상 적용\n분류: 복습/예습 | 중요도: 낮음\n세부사
@@ -1033,7 +1193,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 흡인성 폐렴 예방을 위한
  구강 위생 프로토콜 복습
 DTSTART;TZID=Asia/Seoul:20261029T225900
 DTEND;TZID=Asia/Seoul:20261029T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e58e0d6724f7_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴 장애의 치료 기
  법과 임상 적용\n분류: 복습/예습 | 중요도: 보통\n세부사
@@ -1059,7 +1219,7 @@ SUMMARY:[삼킴재활] [삼킴재활] 재활적 기법과 보상적 기법
   비교 정리 과제
 DTSTART;TZID=Asia/Seoul:20261029T225900
 DTEND;TZID=Asia/Seoul:20261029T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e58e0d6724f7_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 삼킴재활\n강의명: 삼킴 장애의 치료 기
  법과 임상 적용\n분류: 과제 | 중요도: 높음\n세부사항: 
@@ -1086,7 +1246,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 휠체어 포지셔닝
  및 이동 중재 국가고시 예상문제 풀이
 DTSTART;TZID=Asia/Seoul:20261126T225900
 DTEND;TZID=Asia/Seoul:20261126T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:4e9989ae25b0_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 휠체어 이동 및 
  전동휠체어 작동법\, 경사로/턱 주행 중재 전략 (16차시)
@@ -1112,7 +1272,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 16차시 휠체어 이
  동 훈련 실습 복습
 DTSTART;TZID=Asia/Seoul:20261126T225900
 DTEND;TZID=Asia/Seoul:20261126T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:4e9989ae25b0_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 휠체어 이동 및 
  전동휠체어 작동법\, 경사로/턱 주행 중재 전략 (16차시)
@@ -1139,7 +1299,7 @@ SUMMARY:[일상생활활동] [감각과인지재활/일상생활활동]
  국시 대비 휠체어 부속 요소 및 측정 공식 암기 복습
 DTSTART;TZID=Asia/Seoul:20261126T170000
 DTEND;TZID=Asia/Seoul:20261126T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:50bf1285087f_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 15
  주차 - 휠체어 평가\, 부속 요소 및 접촉 기준과 신체 정
@@ -1168,7 +1328,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 15주차 휠체어 측
  정 및 포지셔닝 실습 보고서 작성
 DTSTART;TZID=Asia/Seoul:20261126T225900
 DTEND;TZID=Asia/Seoul:20261126T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:50bf1285087f_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 15
  주차 - 휠체어 평가\, 부속 요소 및 접촉 기준과 신체 정
@@ -1196,7 +1356,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 조별 과제(가사활
  동 및 ADL 중재 사례 분석) 준비
 DTSTART;TZID=Asia/Seoul:20261130T170000
 DTEND;TZID=Asia/Seoul:20261130T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:12fe2f1ec254_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 (ADL
  ) 14주차: 식사하기\, 가정생활 및 가사활동 중재 전략\n
@@ -1223,7 +1383,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 14주차 강의 내용
  복습 및 핵심 개념 노트 정리
 DTSTART;TZID=Asia/Seoul:20261126T225900
 DTEND;TZID=Asia/Seoul:20261126T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:12fe2f1ec254_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 (ADL
  ) 14주차: 식사하기\, 가정생활 및 가사활동 중재 전략\n
@@ -1250,7 +1410,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 14주차 강의 전 피
  로 척도(FSS) 및 상지 정렬 관련 전공 용어 예습
 DTSTART;TZID=Asia/Seoul:20261129T080000
 DTEND;TZID=Asia/Seoul:20261129T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:a0d0b8519f50_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 13
  주차 - 보조도구 및 환경 수정의 생체역학적 원리\n분류:
@@ -1278,7 +1438,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 13주차 보조도구
  및 환경 수정 적용 사례 분석 과제
 DTSTART;TZID=Asia/Seoul:20261126T225900
 DTEND;TZID=Asia/Seoul:20261126T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:a0d0b8519f50_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 13
  주차 - 보조도구 및 환경 수정의 생체역학적 원리\n분류:
@@ -1305,7 +1465,7 @@ SUMMARY:[일상생활활동] [국가고시 대비] ADL 보조도구 및
  관절 치환술 관련 기출문제 풀이
 DTSTART;TZID=Asia/Seoul:20261121T225900
 DTEND;TZID=Asia/Seoul:20261121T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:485d91e41d24_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 9주차 - 일상생활
  활동(ADL) 평가와 도구적 일상생활활동(IADL) 중재: 보조도
@@ -1333,7 +1493,7 @@ SUMMARY:[일상생활활동] [일상생활활동] THR 환자 ADL 중재
  프로토콜 시뮬레이션 과제 준비
 DTSTART;TZID=Asia/Seoul:20261123T170000
 DTEND;TZID=Asia/Seoul:20261123T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:485d91e41d24_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 9주차 - 일상생활
  활동(ADL) 평가와 도구적 일상생활활동(IADL) 중재: 보조도
@@ -1361,7 +1521,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 9주차 강의 복습
  및 보조도구 적용 사례 정리
 DTSTART;TZID=Asia/Seoul:20261119T225900
 DTEND;TZID=Asia/Seoul:20261119T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:485d91e41d24_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 9주차 - 일상생활
  활동(ADL) 평가와 도구적 일상생활활동(IADL) 중재: 보조도
@@ -1388,7 +1548,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 임상 보조기(Splint)
   적용 사례 조사 및 실습 준비
 DTSTART;TZID=Asia/Seoul:20261121T120000
 DTEND;TZID=Asia/Seoul:20261121T130000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:ae8f9a7f825b_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 12
  주차 - 골관절염 환자를 위한 관절 보호 및 에너지 보존 
@@ -1415,7 +1575,7 @@ SUMMARY:[일상생활활동] [일상생활활동] OA 환자 대상 관절
  보호 및 에너지 보존 교육 자료 작성 과제
 DTSTART;TZID=Asia/Seoul:20261123T170000
 DTEND;TZID=Asia/Seoul:20261123T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:ae8f9a7f825b_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 12
  주차 - 골관절염 환자를 위한 관절 보호 및 에너지 보존 
@@ -1444,7 +1604,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 12주차 골관절염
  및 관절 보호 원리 복습
 DTSTART;TZID=Asia/Seoul:20261119T225900
 DTEND;TZID=Asia/Seoul:20261119T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:ae8f9a7f825b_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 12
  주차 - 골관절염 환자를 위한 관절 보호 및 에너지 보존 
@@ -1471,7 +1631,7 @@ SUMMARY:[일상생활활동] [일상생활활동] RA 손가락 변형 기
  전(척측 변위\, 백조목\, 단추구멍) 보조기 중재 조사
 DTSTART;TZID=Asia/Seoul:20261120T225900
 DTEND;TZID=Asia/Seoul:20261120T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:30a0a0377fa6_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 11주차 - 류마티스
   관절염(RA)과 골관절염(OA)의 비교 및 관절염 환자를 위
@@ -1500,7 +1660,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 관절 보호 원칙 및
   에너지 보존 기법 사례 분석 과제
 DTSTART;TZID=Asia/Seoul:20261123T225900
 DTEND;TZID=Asia/Seoul:20261123T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:30a0a0377fa6_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 11주차 - 류마티스
   관절염(RA)과 골관절염(OA)의 비교 및 관절염 환자를 위
@@ -1527,7 +1687,7 @@ SUMMARY:[일상생활활동] [일상생활활동] RA vs OA 차이점 및 R
  A 7가지 진단기준 요약 암기
 DTSTART;TZID=Asia/Seoul:20261119T225900
 DTEND;TZID=Asia/Seoul:20261119T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:30a0a0377fa6_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 11주차 - 류마티스
   관절염(RA)과 골관절염(OA)의 비교 및 관절염 환자를 위
@@ -1555,7 +1715,7 @@ SUMMARY:[일상생활활동] [일상생활활동] THA 후방 접근법 3
  대 금기 자세 및 ADL 수칙 복습
 DTSTART;TZID=Asia/Seoul:20261119T225900
 DTEND;TZID=Asia/Seoul:20261119T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:6b1f2a95b45f_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 엉덩관절
   전치환술(THA) 환자의 수술 후 재활 및 일상생활(ADL) 중
@@ -1582,7 +1742,7 @@ SUMMARY:[일상생활활동] [일상생활활동] THA 환자 ADL 실습
  동영상 촬영 및 조별 평가 과제
 DTSTART;TZID=Asia/Seoul:20261123T225900
 DTEND;TZID=Asia/Seoul:20261123T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:6b1f2a95b45f_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 엉덩관절
   전치환술(THA) 환자의 수술 후 재활 및 일상생활(ADL) 중
@@ -1610,7 +1770,7 @@ SUMMARY:[일상생활활동] [일상생활활동] ADL 보조도구(드레
  싱스틱\, 스타킹에이드\, 리처) 실습 및 사용법 복습
 DTSTART;TZID=Asia/Seoul:20261112T225900
 DTEND;TZID=Asia/Seoul:20261112T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:c1d467298d74_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 - 
  에너지 보존 기법과 관절 보호 원칙 및 ADL 작업 단순화 
@@ -1640,7 +1800,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 관절 보호 및 에너
  지 보존 기법 실제 적용 사례 보고서 작성
 DTSTART;TZID=Asia/Seoul:20261116T225900
 DTEND;TZID=Asia/Seoul:20261116T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:c1d467298d74_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 - 
  에너지 보존 기법과 관절 보호 원칙 및 ADL 작업 단순화 
@@ -1671,7 +1831,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 중간/기말고사 대
  비 실습 및 임상사례 케이스 스터디 준비
 DTSTART;TZID=Asia/Seoul:20261116T080000
 DTEND;TZID=Asia/Seoul:20261116T090000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e2f775e5feb1_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 관절가동범위 제
  한 및 협동장애 환자를 위한 일상생활활동(ADL) 적응 전
@@ -1699,7 +1859,7 @@ SUMMARY:[일상생활활동] [일상생활활동] ADL 3대 원칙(작업
  단순화\, 에너지보존\, 관절보호) 구별 문항 풀이 연습
 DTSTART;TZID=Asia/Seoul:20261113T225900
 DTEND;TZID=Asia/Seoul:20261113T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e2f775e5feb1_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 관절가동범위 제
  한 및 협동장애 환자를 위한 일상생활활동(ADL) 적응 전
@@ -1728,7 +1888,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 착탈의 보조도구(
  리처\, 드레싱스틱\, 버튼후크) 구조 및 기능 비교 정리
 DTSTART;TZID=Asia/Seoul:20261112T225900
 DTEND;TZID=Asia/Seoul:20261112T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e2f775e5feb1_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 관절가동범위 제
  한 및 협동장애 환자를 위한 일상생활활동(ADL) 적응 전
@@ -1758,7 +1918,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 리빙랩 실습 현장
  촬영 및 시나리오 1차 작성
 DTSTART;TZID=Asia/Seoul:20261120T225900
 DTEND;TZID=Asia/Seoul:20261120T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:bebefebd5f51_task_3@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
  편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
@@ -1784,7 +1944,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 장애인 편의시설
  치수 기준 및 주거개조 법적 규격 복습
 DTSTART;TZID=Asia/Seoul:20261116T225900
 DTEND;TZID=Asia/Seoul:20261116T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:bebefebd5f51_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
  편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
@@ -1811,7 +1971,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 리빙랩 지원비(1인
  당 1만원) 카드 수령 및 사용 지침 숙지
 DTSTART;TZID=Asia/Seoul:20261113T160000
 DTEND;TZID=Asia/Seoul:20261113T170000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:bebefebd5f51_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
  편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
@@ -1839,7 +1999,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 리빙랩 조별 역할
  분담 및 대상 시설 선정 완료
 DTSTART;TZID=Asia/Seoul:20261112T225900
 DTEND;TZID=Asia/Seoul:20261112T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:bebefebd5f51_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
  편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
@@ -1866,7 +2026,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 질환별(RA\, DMD\, 치
  매\, 편마비) 주택개조 핵심 금기 및 권장사항 표 작성
 DTSTART;TZID=Asia/Seoul:20261109T225900
 DTEND;TZID=Asia/Seoul:20261109T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:eeb336d055c3_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 공간별 
  주택개조 가이드라인 및 질환별 환경수정·치료사 상담 
@@ -1896,7 +2056,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 척수손상(SCI) C6 vs
  C7 기능 분기점 및 이양 프로토콜 정리
 DTSTART;TZID=Asia/Seoul:20261106T225900
 DTEND;TZID=Asia/Seoul:20261106T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:eeb336d055c3_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 공간별 
  주택개조 가이드라인 및 질환별 환경수정·치료사 상담 
@@ -1924,7 +2084,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 욕실 세면대 및 화
  장실 세부 개조 치수 복습
 DTSTART;TZID=Asia/Seoul:20261105T225900
 DTEND;TZID=Asia/Seoul:20261105T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:eeb336d055c3_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 공간별 
  주택개조 가이드라인 및 질환별 환경수정·치료사 상담 
@@ -1951,7 +2111,7 @@ SUMMARY:[일상생활활동] [지역사회재활/ADL 연계] 지역사회
  주거복지시설 및 실버타운 비즈니스 모델 조사
 DTSTART;TZID=Asia/Seoul:20261109T225900
 DTEND;TZID=Asia/Seoul:20261109T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e74453f81664_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조의 원칙
  과 공간별 세부 환경 수정 가이드라인 (4)\n분류: 과제 | 
@@ -1981,7 +2141,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 주택 개조 공간별
  핵심 치수 및 가이드라인 총정리 복습
 DTSTART;TZID=Asia/Seoul:20261105T225900
 DTEND;TZID=Asia/Seoul:20261105T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:e74453f81664_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조의 원칙
  과 공간별 세부 환경 수정 가이드라인 (4)\n분류: 복습/예
@@ -2009,7 +2169,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 주택 개조 평가 보
  고서 작성 실습 과제
 DTSTART;TZID=Asia/Seoul:20261109T225900
 DTEND;TZID=Asia/Seoul:20261109T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:6030432cf61a_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조 평가 
  및 유니버설 디자인(Universal Design)의 임상적 적용\n분류: 
@@ -2037,7 +2197,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 유니버설 디자인 7
  대 원칙 및 임상 적용 예시 복습
 DTSTART;TZID=Asia/Seoul:20261105T225900
 DTEND;TZID=Asia/Seoul:20261105T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:6030432cf61a_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조 평가 
  및 유니버설 디자인(Universal Design)의 임상적 적용\n분류: 
@@ -2065,7 +2225,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 실습실에서 피벗
  트랜스퍼 및 무릎 블로킹 상호 실습
 DTSTART;TZID=Asia/Seoul:20261031T170000
 DTEND;TZID=Asia/Seoul:20261031T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:c4d4b9e56370_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 상하지 
  의복 입고 벗기 작업치료 중재 전략 및 이동(Transfer) 훈
@@ -2092,7 +2252,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 10주차 강의 녹음
  및 심화 아티클 복습
 DTSTART;TZID=Asia/Seoul:20261028T190000
 DTEND;TZID=Asia/Seoul:20261028T200000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:c4d4b9e56370_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 상하지 
  의복 입고 벗기 작업치료 중재 전략 및 이동(Transfer) 훈
@@ -2119,7 +2279,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 편마비 환자 의복
  착용 훈련 프로토콜 리포트 작성
 DTSTART;TZID=Asia/Seoul:20261029T225900
 DTEND;TZID=Asia/Seoul:20261029T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:c4d4b9e56370_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 상하지 
  의복 입고 벗기 작업치료 중재 전략 및 이동(Transfer) 훈
@@ -2146,7 +2306,7 @@ SUMMARY:[일상생활활동] [지역사회재활/ADL] 지역사회 공공
  기관 편의시설 및 주택 개조 현장 평가 준비
 DTSTART;TZID=Asia/Seoul:20261109T225900
 DTEND;TZID=Asia/Seoul:20261109T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d09f2e5222d7_task_3@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
  상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
@@ -2176,7 +2336,7 @@ SUMMARY:[일상생활활동] [일상생활활동] SCI/CVA 사례 기반 AD
  L 중재 계획서 조별 수립
 DTSTART;TZID=Asia/Seoul:20261102T225900
 DTEND;TZID=Asia/Seoul:20261102T235900
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d09f2e5222d7_task_2@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
  상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
@@ -2205,7 +2365,7 @@ SUMMARY:[일상생활활동] [일상생활활동/지사재] M-CAR 사업
  연계 조장 워크숍 참석
 DTSTART;TZID=Asia/Seoul:20261030T170000
 DTEND;TZID=Asia/Seoul:20261030T180000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d09f2e5222d7_task_1@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
  상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
@@ -2232,7 +2392,7 @@ SUMMARY:[일상생활활동] [일상생활활동] 중간고사 성적 확
  인 및 개별 오답 분석
 DTSTART;TZID=Asia/Seoul:20261029T160000
 DTEND;TZID=Asia/Seoul:20261029T170000
-DTSTAMP:20261126T140036Z
+DTSTAMP:20261126T140610Z
 UID:d09f2e5222d7_task_0@lecturerecord.ai
 DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
  상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
