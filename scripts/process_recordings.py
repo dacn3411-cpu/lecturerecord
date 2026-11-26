@@ -92,6 +92,7 @@ COURSE_ALIASES = {
     "adl": "일상생활활동",
     "일상생활": "일상생활활동",
     "일상생활활동": "일상생활활동",
+    "감인": "감각과인지재활",
     "감각": "감각과인지재활",
     "인지": "감각과인지재활",
     "감각과인지": "감각과인지재활",
@@ -689,50 +690,19 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
                 }
             )
 
-    if analysis.get("concept_articles"):
-        children.append({"object": "block", "type": "divider", "divider": {}})
-        children.append(
-            {
-                "object": "block",
-                "type": "heading_1",
-                "heading_1": {
-                    "rich_text": [
-                        {
-                            "type": "text",
-                            "text": {"content": "📚 강의 핵심 개념 심화 아티클 (Study Articles)"},
-                        }
-                    ]
-                },
-            }
-        )
-        for art in analysis["concept_articles"]:
-            children.append(
-                {
-                    "object": "block",
-                    "type": "heading_2",
-                    "heading_2": {
-                        "rich_text": [{"type": "text", "text": {"content": art["article_title"][:1900]}}]
-                    },
-                }
-            )
-            children.append(
-                {
-                    "object": "block",
-                    "type": "callout",
-                    "callout": {
-                        "icon": {"type": "emoji", "emoji": "💡"},
-                        "rich_text": [
-                            {
-                                "type": "text",
-                                "text": {"content": f"핵심 학습 포인트: {art['why_important']}"[:1800]},
-                            }
-                        ],
-                    },
-                }
-            )
-            append_paragraph_chunks(children, art["article_body"])
+    # Individual lecture notes contain the detailed reading notes, to-dos, exam points, and key terms.
+    # The in-depth concept study articles are generated in a separate standalone Notion page per day!
+    try:
+        dt_short = datetime.strptime(rec_date_str, "%Y-%m-%d").strftime("%y년 %m월 %d일")
+    except ValueError:
+        dt_short = rec_date_str
 
-    page_title = f"📅 {rec_date_str} | [{analysis['course_name']}] {analysis['lecture_title']}"
+    raw_file_stem = Path(analysis.get("source_file", "")).stem
+    raw_file_stem = re.sub(r"^20\d{2}[-_.]?\d{2}[-_.]?\d{2}[-_\s]*", "", raw_file_stem).strip()
+    num_m = re.search(r"(\d+)", raw_file_stem)
+    lec_num_tag = f"강의{num_m.group(1)}" if num_m else "강의"
+
+    page_title = f"📝 {dt_short} {lec_num_tag} — {analysis['lecture_title']}"
     created_url = None
     created_page_id = None
 
@@ -806,7 +776,7 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
         else:
             print(f"[WARN] Notion parent page insert failed ({resp.status_code}): {resp.text}")
 
-    # Append remaining blocks in batches of 90 if the long-form lecture notes & articles exceed 95 blocks
+    # Append remaining blocks in batches of 90 if the long-form lecture notes exceed 95 blocks
     if created_page_id and len(children) > 95:
         for offset in range(95, len(children), 90):
             batch = children[offset : offset + 90]
@@ -1209,6 +1179,7 @@ def main() -> None:
                 "course_name": analysis["course_name"],
                 "lecture_title": analysis["lecture_title"],
                 "recorded_date": analysis["recorded_date"],
+                "source_file": analysis.get("source_file", file_path.name),
                 "summary_3lines": analysis["summary_3lines"],
                 "exam_and_emphasis": analysis.get("exam_and_emphasis", []),
                 "key_terms": analysis.get("key_terms", []),
@@ -1257,14 +1228,14 @@ def main() -> None:
         except Exception as e:
             print(f"[ERROR] Failed to process {file_path.name}: {e}")
 
-    # For any date+course where multiple recordings exist on the same day, create a consolidated Daily Study Article
+    # Create or update the separate standalone Daily Core Study Article page for each date+course
     for c_name, r_date in sorted(newly_processed_dates):
         same_day_lectures = [
             lec
             for lec in state.get("lectures", [])
             if lec.get("course_name") == c_name and lec.get("recorded_date") == r_date
         ]
-        if len(same_day_lectures) >= 2:
+        if same_day_lectures:
             sync_daily_consolidated_article(c_name, r_date, same_day_lectures)
 
     update_ics_calendar(state)
@@ -1274,9 +1245,9 @@ def main() -> None:
 
 def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectures: List[Dict[str, Any]]) -> None:
     """
-    When multiple lecture recordings (e.g., 1교시, 2교시, 3교시) are recorded on the same day,
-    combines all of that day's lecture contents and concept articles into one comprehensive
-    A4 2~4+ page Daily Master Study Article page in Notion inside the course folder.
+    Creates a separate, standalone Notion note specifically for that day's in-depth Concept Study Articles:
+    e.g. `📚 26년 11월 16일 핵심 심화 아티클 (강의10, 11, 12 종합)`
+    alongside the individual lecture notes (`📝 26년 11월 16일 강의10 — ...`).
     """
     token = os.environ.get("NOTION_TOKEN", "").strip()
     if not token:
@@ -1298,8 +1269,10 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
     try:
         dt_obj = datetime.strptime(recorded_date, "%Y-%m-%d")
         date_with_day = f"{recorded_date} ({weekday_names[dt_obj.weekday()]}요일)"
+        dt_short = dt_obj.strftime("%y년 %m월 %d일")
     except ValueError:
         date_with_day = recorded_date
+        dt_short = recorded_date
 
     # Locate course folder page
     course_folder_page_id = parent_page_id
@@ -1320,6 +1293,13 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
         pass
 
     ordered_lectures = list(reversed(lectures))
+    lec_nums = []
+    for idx, lec in enumerate(ordered_lectures, 1):
+        stem = Path(lec.get("source_file", "")).stem
+        stem = re.sub(r"^20\d{2}[-_.]?\d{2}[-_.]?\d{2}[-_\s]*", "", stem).strip()
+        m_num = re.search(r"(\d+)", stem)
+        lec_nums.append(m_num.group(1) if m_num else str(idx))
+    lec_nums_str = ", ".join(lec_nums)
     titles_joined = " / ".join(lec["lecture_title"] for lec in ordered_lectures)
 
     children: List[Dict[str, Any]] = [
@@ -1327,79 +1307,42 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
             "object": "block",
             "type": "callout",
             "callout": {
-                "icon": {"type": "emoji", "emoji": "📰"},
+                "icon": {"type": "emoji", "emoji": "📚"},
                 "rich_text": [
                     {
                         "type": "text",
                         "text": {
                             "content": (
-                                f"📅 강의 일자: {date_with_day} (하루 전체 강의 통합본 — 총 {len(ordered_lectures)}개 녹음 취합)\n"
+                                f"📅 강의 일자: {date_with_day} ({dt_short} 강의 {lec_nums_str} 핵심 개념 총정리 아티클)\n"
                                 f"🎓 강좌명: {course_name}\n"
-                                f"📚 포함 강의: {titles_joined[:1400]}"
+                                f"📖 취합된 강의 범위: {titles_joined[:1400]}\n\n"
+                                f"이 노트는 오늘 진행된 모든 강의에서 반드시 공부하고 이해해야 할 핵심 전공 개념들을 "
+                                f"A4 2~4페이지 이상의 심화 아티클 형태로 따로 분리하여 깊이 있게 정리한 학습 전용 노트입니다."
                             )
                         },
                     }
                 ],
             },
         },
-        {
-            "object": "block",
-            "type": "heading_1",
-            "heading_1": {
-                "rich_text": [
-                    {
-                        "type": "text",
-                        "text": {"content": f"📖 {date_with_day} 하루 강의 전체 흐름 & 통합 리마인드 노트"},
-                    }
-                ]
-            },
-        },
     ]
 
+    art_count = 0
     for idx, lec in enumerate(ordered_lectures, 1):
+        children.append({"object": "block", "type": "divider", "divider": {}})
         children.append(
             {
                 "object": "block",
-                "type": "heading_2",
-                "heading_2": {
+                "type": "heading_1",
+                "heading_1": {
                     "rich_text": [
-                        {"type": "text", "text": {"content": f"[Part {idx}] {lec['lecture_title']}"[:1900]}}
+                        {
+                            "type": "text",
+                            "text": {"content": f"📘 [{lec['lecture_title']}] 핵심 개념 심화 아티클"[:1900]},
+                        }
                     ]
                 },
             }
         )
-        append_paragraph_chunks(children, lec.get("summary_3lines", ""))
-        for sec in lec.get("detailed_notes", []):
-            ts = f" ({sec['timestamp_hint']})" if sec.get("timestamp_hint") else ""
-            children.append(
-                {
-                    "object": "block",
-                    "type": "heading_3",
-                    "heading_3": {
-                        "rich_text": [{"type": "text", "text": {"content": f"• {sec['section_title']}{ts}"[:1900]}}]
-                    },
-                }
-            )
-            append_paragraph_chunks(children, sec.get("content", ""))
-
-    children.append({"object": "block", "type": "divider", "divider": {}})
-    children.append(
-        {
-            "object": "block",
-            "type": "heading_1",
-            "heading_1": {
-                "rich_text": [
-                    {
-                        "type": "text",
-                        "text": {"content": f"📚 {date_with_day} 오늘 공부해야 할 핵심 개념 종합 심화 아티클 (A4 장문 독해용)"},
-                    }
-                ]
-            },
-        }
-    )
-
-    art_count = 0
-    for lec in ordered_lectures:
         for art in lec.get("concept_articles", []):
             art_count += 1
             children.append(
@@ -1425,7 +1368,7 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
                         "rich_text": [
                             {
                                 "type": "text",
-                                "text": {"content": f"핵심 학습 & 국시 포인트: {art['why_important']}"[:1800]},
+                                "text": {"content": f"핵심 학습 & 국가고시 포인트: {art['why_important']}"[:1800]},
                             }
                         ],
                     },
@@ -1433,10 +1376,10 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
             )
             append_paragraph_chunks(children, art.get("article_body", ""))
 
-    page_title = f"📰 {recorded_date} (하루 통합 심화 아티클) | [{course_name}] 총 {len(ordered_lectures)}강 종합본"
+    page_title = f"📚 {dt_short} 핵심 심화 아티클 (강의 {lec_nums_str} 통합)"
     payload = {
         "parent": {"page_id": course_folder_page_id},
-        "icon": {"type": "emoji", "emoji": "📰"},
+        "icon": {"type": "emoji", "emoji": "📚"},
         "properties": {
             "title": {"title": [{"text": {"content": page_title}}]},
         },
@@ -1445,7 +1388,7 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
     resp = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload, timeout=30)
     if resp.ok:
         created_page_id = resp.json().get("id")
-        print(f"[INFO] Created Daily Consolidated Study Article in Notion: {resp.json().get('url')}")
+        print(f"[INFO] Created Separate Daily Core Study Article in Notion: {resp.json().get('url')}")
         if created_page_id and len(children) > 95:
             for offset in range(95, len(children), 90):
                 batch = children[offset : offset + 90]
