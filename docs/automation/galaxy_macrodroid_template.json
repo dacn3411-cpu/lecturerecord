@@ -1,0 +1,27 @@
+{
+  "macro_name": "LectureRecord_Galaxy_AutoUpload",
+  "description": "갤럭시 삼성 음성 녹음(.m4a) 저장 완료 시 즉시 GitHub 저장소(dacn3411-cpu/lecturerecord)로 자동 업로드하여 Gemini AI 분석 + 노션 정리 + 삼성 캘린더 일정 등록을 실행합니다.",
+  "trigger": {
+    "type": "FileSystemEvent",
+    "watched_directories": [
+      "/storage/emulated/0/Recordings/Voice Recorder",
+      "/storage/emulated/0/Voice Recorder"
+    ],
+    "events": ["FILE_CREATED", "CLOSE_WRITE"],
+    "file_filter": "*.m4a;*.mp3;*.wav;*.aac;*.3gp"
+  },
+  "actions": [
+    {
+      "step": 1,
+      "type": "ShellScript_Termux_Or_HTTP_PUT",
+      "description": "새로 생성된 녹음 파일을 Base64 인코딩하여 GitHub Contents API로 전송",
+      "curl_command_template": "FILE_PATH=\"$1\"; FILE_NAME=$(basename \"$FILE_PATH\"); DATE_PREFIX=$(date +%Y-%m-%d); B64=$(base64 -w 0 \"$FILE_PATH\"); curl -X PUT -H \"Authorization: Bearer YOUR_GITHUB_PAT\" -H \"Accept: application/vnd.github+json\" https://api.github.com/repos/dacn3411-cpu/lecturerecord/contents/recordings/${DATE_PREFIX}_${FILE_NAME} -d \"{\\\"message\\\":\\\"📱 Auto-upload from Galaxy: ${FILE_NAME}\\\",\\\"content\\\":\\\"${B64}\\\"}\""
+    },
+    {
+      "step": 2,
+      "type": "Notification",
+      "title": "🎙️ 강의 녹음 자동 업로드 완료",
+      "body": "AI가 강의 내용을 분석하여 노션 노트와 삼성 캘린더 할 일을 정리하고 있습니다."
+    }
+  ]
+}

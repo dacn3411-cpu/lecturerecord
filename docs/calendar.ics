@@ -1,0 +1,8 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//LectureRecord AI//Samsung Calendar Feed//KO
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:🎓 강의 과제 & 시험 일정 (AI 자동정리)
+X-WR-TIMEZONE:Asia/Seoul
+END:VCALENDAR

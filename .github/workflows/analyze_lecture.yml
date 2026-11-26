@@ -1,0 +1,67 @@
+name: Analyze Lecture Recording
+
+on:
+  push:
+    paths:
+      - 'recordings/**'
+      - '!recordings/.gitkeep'
+      - '!recordings/processed/**'
+  workflow_dispatch:
+    inputs:
+      file_path:
+        description: '분석할 녹음 파일 경로 (비워두면 recordings/ 내 미처리 파일 전체 분석)'
+        required: false
+        default: ''
+      course_name:
+        description: '강좌명 강제 지정 (선택사항)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  analyze_and_sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          pip install -r requirements.txt
+
+      - name: Run Lecture AI Analyzer & Notion/Calendar Sync
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_LECTURE_DB_ID: ${{ secrets.NOTION_LECTURE_DB_ID }}
+          NOTION_TASK_DB_ID: ${{ secrets.NOTION_TASK_DB_ID }}
+          NOTION_PARENT_PAGE_ID: ${{ secrets.NOTION_PARENT_PAGE_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+          TARGET_FILE_PATH: ${{ github.event.inputs.file_path }}
+          OVERRIDE_COURSE_NAME: ${{ github.event.inputs.course_name }}
+        run: |
+          python scripts/process_recordings.py
+
+      - name: Commit Analysis Notes, Calendar ICS & Update State
+        run: |
+          git config user.name "Lecture AI Bot"
+          git config user.email "actions@github.com"
+          git add notes/ docs/ recordings/
+          if ! git diff --staged --quiet; then
+            git commit -m "🤖 Auto-analyze lecture recordings & update calendar/notes [skip ci]"
+            git push
+          else
+            echo "No changes to commit."
+          fi

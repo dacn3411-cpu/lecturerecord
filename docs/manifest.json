@@ -1,0 +1,10 @@
+{
+  "name": "LectureRecord AI — 강의 녹음 자동 분석 & 노션·삼성캘린더",
+  "short_name": "강의녹음AI",
+  "description": "갤럭시 기존 강좌별 녹음 일괄 업로드 및 실시간 녹음 즉시 분석, 노션 & 삼성 캘린더 자동 연동",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
+  "orientation": "portrait-primary"
+}

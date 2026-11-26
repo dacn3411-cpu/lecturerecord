@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>LectureRecord AI — 갤럭시 강의 녹음 자동 분석 & 노션·삼성캘린더 연동</title>
+  <meta name="description" content="핸드폰 기존 강좌별 녹음 일괄 업로드 및 실시간 녹음 즉시 분석, 노션 노트 정리 및 삼성 캘린더 알림 자동 연동 시스템" />
+  <meta name="theme-color" content="#0b0e14" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="brand-group">
+        <div class="brand-icon" aria-hidden="true">🎙️</div>
+        <div class="brand-title">
+          <h1>LectureRecord AI</h1>
+          <p>갤럭시 녹음 즉시 업로드 → AI 강의 분석 → 노션 정리 & 삼성 캘린더 알림</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a id="github-actions-link" href="https://github.com/dacn3411-cpu/lecturerecord/actions" target="_blank" rel="noopener" class="btn btn-secondary">
+          ⚙️ 분석 현황 (Actions)
+        </a>
+      </div>
+    </header>
+
+    <nav class="nav-tabs" role="tablist">
+      <button id="tab-upload-btn" class="tab-btn active" role="tab" onclick="switchTab('upload')">
+        📤 녹음 업로드 & 실시간 녹음
+      </button>
+      <button id="tab-dashboard-btn" class="tab-btn" role="tab" onclick="switchTab('dashboard')">
+        ✅ 해야 할 것 & 강의 노트
+      </button>
+      <button id="tab-galaxy-btn" class="tab-btn" role="tab" onclick="switchTab('galaxy')">
+        📱 갤럭시 무인 자동화 & 캘린더 설정
+      </button>
+      <button id="tab-settings-btn" class="tab-btn" role="tab" onclick="switchTab('settings')">
+        🔑 GitHub 연결 설정
+      </button>
+    </nav>
+
+    <!-- TAB 1: UPLOAD & LIVE RECORD -->
+    <main id="panel-upload" class="tab-panel active">
+      <section class="surface-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">1. 강좌 선택 및 메타데이터</h2>
+            <p class="card-subtitle">핸드폰에 있는 기존 녹음 파일들을 과목별로 묶어 올리거나, 지금 바로 강의를 녹음해 즉시 업로드하세요.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="course-input">강좌명 (폴더 자동 분류)</label>
+            <input id="course-input" type="text" class="input-field" placeholder="예: 운영체제, 자료구조, 경영학원론 (비워두면 AI가 자동 추론)" />
+            <div id="course-chips-container" class="course-chips"></div>
+          </div>
+          <div class="form-group">
+            <label for="date-input">녹음/강의 일자</label>
+            <input id="date-input" type="date" class="input-field" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label for="new-course-add">자주 듣는 강좌 빠른 추가</label>
+          <div style="display: flex; gap: 8px;">
+            <input id="new-course-add" type="text" class="input-field" placeholder="새 강좌명 입력 후 추가 버튼 클릭" />
+            <button id="add-course-btn" type="button" class="btn btn-secondary" onclick="addSavedCourse()">+ 강좌 등록</button>
+          </div>
+        </div>
+
+        <div class="upload-split">
+          <!-- Existing Files Batch Upload -->
+          <div id="file-dropzone" class="dropzone" onclick="document.getElementById('file-input').click()">
+            <div class="dropzone-icon">📂</div>
+            <div class="dropzone-title">갤럭시 기존 녹음 파일 선택 (다중 선택 가능)</div>
+            <div class="dropzone-hint">삼성 음성 녹음(.m4a), .mp3, .wav, .aac, .ogg 등 여러 파일을 한 번에 선택하세요</div>
+            <input id="file-input" type="file" accept="audio/*,.m4a,.mp3,.wav,.aac,.ogg,.flac,.3gp,.amr,.webm,.mp4" multiple style="display: none;" onchange="handleFileSelect(event)" />
+          </div>
+
+          <!-- Live Voice Recorder -->
+          <div class="recorder-box">
+            <div class="record-timer" id="record-timer">00:00:00</div>
+            <div class="record-status" id="record-status">강의실에서 바로 녹음 후 종료 즉시 업로드</div>
+            <div style="display: flex; gap: 10px; width: 100%; justify-content: center;">
+              <button id="btn-start-record" type="button" class="btn btn-primary" onclick="toggleRecording()">
+                🔴 실시간 녹음 시작
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="upload-queue-section" style="display: none; margin-top: 22px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="font-size: 0.96rem; font-weight: 700;">업로드 대기열 (<span id="queue-count">0</span>개 파일)</h3>
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-clear-queue" type="button" class="btn btn-secondary" onclick="clearQueue()">목록 비우기</button>
+              <button id="btn-start-upload" type="button" class="btn btn-primary" onclick="uploadAllQueued()">🚀 GitHub 즉시 업로드 & AI 분석 시작</button>
+            </div>
+          </div>
+          <div id="queue-list" class="queue-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- TAB 2: DASHBOARD (ACTION ITEMS & LECTURE NOTES) -->
+    <section id="panel-dashboard" class="tab-panel">
+      <div class="surface-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">⏰ 해야 할 것 & 마감 일정 (과제 / 시험 / 복습)</h2>
+            <p class="card-subtitle">강의 녹음에서 AI가 추출한 할 일 목록입니다. 노션과 삼성 캘린더에 자동 동기화됩니다.</p>
+          </div>
+          <button id="btn-refresh-data" type="button" class="btn btn-secondary" onclick="loadLectureData()">🔄 새로고침</button>
+        </div>
+        <div id="tasks-container" class="task-list"></div>
+      </div>
+
+      <div class="surface-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">📚 강좌별 AI 분석 노트 아카이브</h2>
+            <p class="card-subtitle">핵심 3줄 요약, 교수님 시험 강조 포인트, 상세 섹션 필기를 확인하세요.</p>
+          </div>
+        </div>
+        <div id="lectures-container" class="lecture-list"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: GALAXY AUTOMATION & SAMSUNG CALENDAR SYNC -->
+    <section id="panel-galaxy" class="tab-panel">
+      <div class="surface-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">📅 삼성 캘린더(Samsung Calendar) 자동 알림 연동</h2>
+            <p class="card-subtitle">강의에서 추출된 과제 마감일과 시험 일정을 갤럭시 기본 삼성 캘린더에서 알림(1일 전, 2시간 전)으로 받으세요.</p>
+          </div>
+        </div>
+
+        <div class="step-list">
+          <div class="step-box">
+            <h4>방법 A. 원클릭 iCal(.ics) 캘린더 구독 (가장 간편 · 1분 완성)</h4>
+            <p>아래 캘린더 구독 주소를 복사하여 본인의 <strong>구글 캘린더 웹(calendar.google.com) → 다른 캘린더(+) → URL로 추가</strong>에 등록하세요. 갤럭시 <strong>삼성 캘린더 앱</strong>은 구글 계정과 기본 연동되어 있으므로 모든 과제/시험 알림이 갤럭시에서 자동으로 울립니다.</p>
+            <div class="code-copy-box">
+              <span id="ics-url-display">https://dacn3411-cpu.github.io/lecturerecord/calendar.ics</span>
+              <button type="button" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.78rem;" onclick="copyIcsUrl()">복사</button>
+            </div>
+            <div style="margin-top: 10px;">
+              <a href="calendar.ics" download="lecturerecord_calendar.ics" class="btn btn-secondary" style="font-size: 0.82rem;">📥 현재 .ics 파일 직접 다운로드 (삼성 캘린더로 바로 열기)</a>
+            </div>
+          </div>
+
+          <div class="step-box">
+            <h4>방법 B. 실시간 구글/삼성 캘린더 다이렉트 Push 연동 (선택사항)</h4>
+            <p>구글 캘린더 URL 구독의 갱신 주기를 기다리지 않고 녹음 분석 완료 <strong>즉시(1초 내)</strong> 삼성 캘린더에 일정을 꽂아 넣고 싶다면 GitHub Secrets에 <code>GOOGLE_SERVICE_ACCOUNT_JSON</code>과 <code>GOOGLE_CALENDAR_ID</code>를 추가하면 즉시 반영됩니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="surface-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">🤖 갤럭시 백그라운드 무인 업로드 설정 (MacroDroid)</h2>
+            <p class="card-subtitle">삼성 음성 녹음 앱에서 녹음 정지 버튼을 누르는 순간, 아무 조작 없이 자동으로 GitHub에 업로드되어 분석이 시작됩니다.</p>
+          </div>
+          <a href="automation/galaxy_macrodroid_template.json" download="LectureRecord_Galaxy_AutoUpload.json" class="btn btn-primary">
+            📲 MacroDroid 자동화 설정 파일 다운로드
+          </a>
+        </div>
+
+        <div class="step-list">
+          <div class="step-box">
+            <h4>1단계: 갤럭시 음성 녹음 폴더 경로 확인</h4>
+            <p>삼성 음성 녹음 앱의 기본 저장 경로는 <code>/storage/emulated/0/Recordings/Voice Recorder/</code> (또는 <code>/storage/emulated/0/Voice Recorder/</code>) 입니다. 녹음 시 파일명을 <code>[운영체제] 3주차 강의.m4a</code> 처럼 저장하거나 과목별 하위 폴더에 넣으면 과목명이 자동 분류됩니다. (기본 이름인 <code>음성 001.m4a</code> 그대로 올려도 AI가 강의 내용을 듣고 과목명을 스스로 추론합니다!)</p>
+          </div>
+
+          <div class="step-box">
+            <h4>2단계: MacroDroid(또는 FolderSync)로 새 녹음 파일 감지 시 즉시 GitHub API 전송</h4>
+            <ol>
+              <li>갤럭시 Play 스토어에서 <strong>MacroDroid</strong> 설치</li>
+              <li><strong>트리거(Trigger)</strong>: <code>파일 시스템 이벤트(File System Event)</code> → <code>파일 생성됨</code> → 폴더: <code>Recordings/Voice Recorder</code></li>
+              <li><strong>액션(Action)</strong>: <code>HTTP 요청(HTTP Request)</code> → 메서드: <code>PUT</code></li>
+              <li>URL: <code>https://api.github.com/repos/dacn3411-cpu/lecturerecord/contents/recordings/{날짜}_{파일명}</code></li>
+              <li>헤더: <code>Authorization: Bearer 본인_GITHUB_PAT_토큰</code></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: GITHUB & NOTION SETTINGS -->
+    <section id="panel-settings" class="tab-panel">
+      <div class="surface-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">🔑 모바일 웹 업로더 연결 설정</h2>
+            <p class="card-subtitle">입력하신 GitHub 토큰은 외부 서버로 전송되지 않으며, 오직 현재 핸드폰 브라우저(LocalStorage)에만 안전하게 저장됩니다.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="setting-owner">GitHub 아이디 (Owner)</label>
+            <input id="setting-owner" type="text" class="input-field" value="dacn3411-cpu" />
+          </div>
+          <div class="form-group">
+            <label for="setting-repo">저장소 이름 (Repository)</label>
+            <input id="setting-repo" type="text" class="input-field" value="lecturerecord" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label for="setting-token">GitHub Personal Access Token (repo 권한)</label>
+          <input id="setting-token" type="password" class="input-field" placeholder="ghp_... 또는 github_pat_..." />
+          <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px;">
+            발급 방법: GitHub Settings → Developer settings → Personal access tokens (Fine-grained) → <code>dacn3411-cpu/lecturerecord</code> 저장소 선택 → Permissions에서 <strong>Contents: Read and write</strong> 허용
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button id="btn-save-settings" type="button" class="btn btn-primary" onclick="saveSettings()">💾 설정 저장</button>
+          <button id="btn-test-connection" type="button" class="btn btn-secondary" onclick="testGitHubConnection()">🔌 연결 테스트</button>
+        </div>
+        <p id="settings-feedback" style="margin-top: 12px; font-size: 0.85rem;"></p>
+      </div>
+
+      <div class="surface-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">⚙️ GitHub Actions 필수 Secrets (AI 분석 & 노션 연동용)</h2>
+            <p class="card-subtitle">GitHub 저장소 상단 <strong>Settings → Secrets and variables → Actions → New repository secret</strong>에 아래 항목을 등록하세요.</p>
+          </div>
+        </div>
+
+        <div class="step-list">
+          <div class="step-box">
+            <h4>1. GEMINI_API_KEY (필수 · 무료 발급)</h4>
+            <p><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color: var(--accent-primary);">Google AI Studio (aistudio.google.com/apikey)</a>에서 무료로 발급받은 키를 등록하세요. 1~2시간짜리 긴 강의 오디오 파일(.m4a)도 변환 없이 한 번에 인식하고 요약합니다.</p>
+          </div>
+          <div class="step-box">
+            <h4>2. NOTION_TOKEN & NOTION_PARENT_PAGE_ID (노션 자동 정리용)</h4>
+            <ul>
+              <li><a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener" style="color: var(--accent-primary);">노션 API 통합(notion.so/my-integrations)</a>에서 새 통합을 만들고 <strong>프라이빗 API 통합 시크릿</strong>을 복사해 <code>NOTION_TOKEN</code>으로 등록합니다.</li>
+              <li>강의 노트를 모을 노션 페이지 우측 상단 <code>•••</code> → <strong>연결(Connections)</strong>에서 방금 만든 통합을 연결합니다.</li>
+              <li>해당 노션 페이지 링크 끝의 32자리 ID를 <code>NOTION_PARENT_PAGE_ID</code>로 등록하면, 강의가 끝날 때마다 자동으로 노션 페이지와 할 일 체크리스트가 생성됩니다!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
