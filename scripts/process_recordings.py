@@ -221,7 +221,7 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
 
     courses_list_str = ", ".join(OFFICIAL_COURSES)
     prompt = f"""
-당신은 고신대학교 작업치료학과 3학년 강의 녹음을 완벽하게 분석하여 노트와 해야 할 일(Action Items)을 정리하는 AI 조교입니다.
+당신은 고신대학교 작업치료학과 3학년 강의를 완벽하게 복기하고 전공 서적·아티클 수준으로 깊이 있게 정리하는 AI 튜터입니다.
 
 [2026년 2학기 수강 과목 목록 (반드시 아래 과목명 중 하나로 분류하세요)]
 {courses_list_str}
@@ -232,14 +232,25 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
 - 폴더/파일 기반 추정 강좌명: {meta['course']}
 - 녹음 기준 날짜: {meta['date']} (상대적 날짜 계산 시 이 날짜를 기준으로 YYYY-MM-DD를 계산하세요. 예: '다음 주 수요일까지', '내일까지')
 
-오디오 전체를 주의 깊게 듣고 다음 JSON 스키마에 맞춰 한국어로 상세하고 정확하게 응답하세요:
-1. `course_name`: 위 [2026년 2학기 수강 과목 목록] 중 가장 일치하는 공식 과목명을 정확히 선택하세요. 추정 강좌명이 이미 공식 과목명 중 하나라면 그대로 유지하세요.
+[작성 원칙 — 매우 중요]
+- **지나치게 짧게 요약하지 마세요!** 학생이 나중에 시간 내서 천천히 읽으며 수업 전체 흐름과 교수님의 설명, 임상 예시를 생생하게 리마인드(복기)할 수 있도록 **충분히 풍부한 분량과 서술형 문장**으로 자세히 풀어쓰세요.
+- 강의에서 다룬 주요 개념들은 단순 단어 뜻풀이에 그치지 말고, 노트 맨 아래에 **별도의 심화 학습 아티클(블로그 포스트/전공 칼럼처럼 술술 읽히는 긴 글 형태)** 로 깊이 있게 작성해주세요.
+
+오디오 전체를 주의 깊게 듣고 다음 JSON 스키마에 맞춰 한국어로 상세하고 풍부하게 응답하세요:
+1. `course_name`: 위 [2026년 2학기 수강 과목 목록] 중 가장 일치하는 공식 과목명을 정확히 선택하세요.
 2. `lecture_title`: 오늘 강의의 핵심 주제를 담은 명확한 제목 (파일명에 주차나 번호가 있다면 포함, 예: "10주차 - ...")
-3. `summary_3lines`: 강의 전체 핵심 요약 (3~5문장)
-4. `detailed_notes`: 강의 흐름에 따른 섹션별 상세 필기 노트 (배열: 각 항목은 `section_title`, `content`, `timestamp_hint`)
-5. `exam_and_emphasis`: 교수님/강사가 "시험에 나온다", "중요하다", "국가시험(국시) 빈출이다", "꼭 기억해라"라고 강조한 포인트 목록 (배열)
-6. `key_terms`: 핵심 용어 및 개념 정의 (배열: 각 항목은 `term`, `definition`)
-7. `action_items`: 학생이 해야 할 일, 과제, 실습 준비, 퀴즈, 시험 일정, 복습할 범위 등 (배열).
+3. `summary_3lines`: 오늘 수업의 전체 맥락과 핵심 흐름을 1~2문단으로 자연스럽게 정리한 도입 개요
+4. `detailed_notes`: 강의 시간 흐름에 따른 섹션별 상세 강의록 (배열: 각 항목은 `section_title`, `timestamp_hint`, `content`).
+   - `content`는 개조식 단답형이 아니라, **교수님이 수업 중에 설명하신 원리, 배경, 임상 사례, 환자 적용 예시, 비유 등을 빠짐없이 담아서 읽을거리로서 충분한 분량(섹션당 최소 2~4문단 이상)으로 상세히 서술**하세요.
+5. `exam_and_emphasis`: 교수님/강사가 "시험에 나온다", "중요하다", "국가시험(국시) 빈출이다", "꼭 기억해라"라고 강조한 포인트와 그 이유/맥락 (배열)
+6. `key_terms`: 핵심 전공 용어 및 상세 정의 (배열: 각 항목은 `term`, `definition`)
+7. `concept_articles`: **강의에서 나온 꼭 공부해야 할 핵심 개념들을 선정하여 맨 밑에 읽을 수 있도록 작성한 심화 아티클 시리즈** (배열, 최소 4~6개 핵심 주제).
+   - **분량 요구사항**: 아티클 전체 합산 분량이 **최소 A4 용지 2~3페이지 이상(공백 포함 4,000~7,000자 이상)** 이 되도록 절대 축약하지 말고 전공 교과서·임상 리뷰 논문 수준으로 깊이 있게 풀어서 작성하세요.
+   - 각 항목은:
+     - `article_title`: 아티클 제목 (예: "📖 [심화 아티클 1] 작업치료에서 이동(Transfer) 훈련의 생체역학적 원리와 임상 중재 프로토콜")
+     - `why_important`: 이 개념이 임상 실무 및 작업치료사 국가고시/전공 시험에서 왜 중요한지 핵심 포인트
+     - `article_body`: 비전공자나 복습하는 학생이 이 글만 읽어도 개념을 100% 완벽히 이해할 수 있도록 ① 개념의 이론적 배경과 정의 → ② 세부 생리학적/해부학적/임상적 기전 및 단계별 분류 → ③ 실제 환자 사례(Case)에서의 평가 도구 및 작업치료 중재 전략 → ④ 임상 주의사항(금기증) 및 국가고시 시험 대비 핵심 암기 팁까지 **각 아티클당 최소 4~7개의 긴 문단으로 구성된 완결성 있는 장문의 아티클(Article)** 로 작성하세요.
+8. `action_items`: 학생이 해야 할 일, 과제, 실습 준비, 퀴즈, 시험 일정, 복습할 범위 등 (배열).
    - 각 항목은:
      - `title`: 해야 할 일 제목 (예: "[일상생활활동] 10주차 과제 제출")
      - `category`: "과제" | "시험" | "퀴즈" | "복습/예습" | "기타" 중 택1
@@ -248,7 +259,7 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
      - `due_time`: 마감 시간 (`HH:MM` 24시간 형식, 언급 없으면 `"23:59"` 또는 시험인 경우 `"09:00"`)
      - `is_exact_date`: 강의 중 명시적인 마감일/시험일이 언급되었으면 `true`, 추천 복습 일정이면 `false`
      - `details`: 세부 요구사항 (제출 방식, 분량, 주의사항 등)
-8. `transcript_excerpt`: 강의 주요 발언 및 핵심 내용 녹취록 (시간 흐름순 정리)
+9. `transcript_excerpt`: 강의 주요 발언 및 핵심 흐름 녹취록 (시간 흐름순으로 상세히 정리)
 """
 
     response_schema = {
@@ -284,6 +295,18 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
                     "required": ["term", "definition"],
                 },
             },
+            "concept_articles": {
+                "type": "ARRAY",
+                "items": {
+                    "type": "OBJECT",
+                    "properties": {
+                        "article_title": {"type": "STRING"},
+                        "why_important": {"type": "STRING"},
+                        "article_body": {"type": "STRING"},
+                    },
+                    "required": ["article_title", "why_important", "article_body"],
+                },
+            },
             "action_items": {
                 "type": "ARRAY",
                 "items": {
@@ -309,6 +332,7 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
             "detailed_notes",
             "exam_and_emphasis",
             "key_terms",
+            "concept_articles",
             "action_items",
             "transcript_excerpt",
         ],
@@ -347,7 +371,7 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
                         config=types.GenerateContentConfig(
                             response_mime_type="application/json",
                             response_schema=response_schema,
-                            temperature=0.2,
+                            temperature=0.3,
                         ),
                     )
                     result = json.loads(response.text)
@@ -390,12 +414,12 @@ def write_markdown_note(analysis: Dict[str, Any]) -> Path:
     md_path = course_dir / f"{date_str}_{safe_title}.md"
 
     lines = [
-        f"# [{analysis['course_name']}] {analysis['lecture_title']}",
+        f"# 📅 {date_str} | [{analysis['course_name']}] {analysis['lecture_title']}",
         "",
         f"- **녹음 일자**: {date_str}",
         f"- **원본 파일**: `{analysis['source_file']}`",
         "",
-        "## 📌 3줄 핵심 요약",
+        "## 📌 강의 전체 맥락 & 핵심 개요",
         analysis["summary_3lines"],
         "",
         "## ✅ 해야 할 일 (Action Items & 과제/시험)",
@@ -413,14 +437,14 @@ def write_markdown_note(analysis: Dict[str, Any]) -> Path:
     else:
         lines.append("- 추출된 과제나 특별 할 일이 없습니다.")
 
-    lines.extend(["", "## ⭐ 교수님 강조 & 시험 출제 포인트"])
+    lines.extend(["", "## ⭐ 교수님 강조 & 국가고시/시험 출제 포인트"])
     if analysis.get("exam_and_emphasis"):
         for emp in analysis["exam_and_emphasis"]:
             lines.append(f"- 🔥 {emp}")
     else:
         lines.append("- 별도 시험 강조 사항 없음")
 
-    lines.extend(["", "## 📖 섹션별 상세 강의 노트"])
+    lines.extend(["", "## 📖 리마인드를 위한 섹션별 상세 강의록"])
     for idx, sec in enumerate(analysis.get("detailed_notes", []), 1):
         ts = f" ({sec['timestamp_hint']})" if sec.get("timestamp_hint") else ""
         lines.append(f"### {idx}. {sec['section_title']}{ts}")
@@ -433,7 +457,16 @@ def write_markdown_note(analysis: Dict[str, Any]) -> Path:
         defn = kt["definition"].replace("|", "\\|").replace("\n", " ")
         lines.append(f"| **{term}** | {defn} |")
 
-    lines.extend(["", "## 🎙️ 주요 녹취록 요약", analysis.get("transcript_excerpt", "")])
+    if analysis.get("concept_articles"):
+        lines.extend(["", "---", "", "## 📚 공부해야 할 핵심 개념 심화 아티클 (Study Articles)"])
+        for art in analysis["concept_articles"]:
+            lines.append(f"### {art['article_title']}")
+            lines.append(f"> 💡 **핵심 중요도**: {art['why_important']}")
+            lines.append("")
+            lines.append(art["article_body"])
+            lines.append("")
+
+    lines.extend(["", "## 🎙️ 주요 녹취록 흐름", analysis.get("transcript_excerpt", "")])
 
     md_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"[INFO] Saved Markdown lecture note: {md_path.relative_to(ROOT_DIR)}")
@@ -504,13 +537,28 @@ def ensure_notion_course_folders() -> Dict[str, str]:
     return course_map
 
 
+def append_paragraph_chunks(blocks_list: List[Dict[str, Any]], text: str) -> None:
+    """Splits long multi-paragraph text into Notion paragraph blocks respecting the 2000-char limit."""
+    for para in text.split("\n\n"):
+        cleaned = para.strip()
+        if not cleaned:
+            continue
+        for i in range(0, len(cleaned), 1800):
+            blocks_list.append(
+                {
+                    "object": "block",
+                    "type": "paragraph",
+                    "paragraph": {
+                        "rich_text": [{"type": "text", "text": {"content": cleaned[i : i + 1800]}}]
+                    },
+                }
+            )
+
+
 def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
     """
-    Syncs the analyzed lecture note and action items to Notion.
-    Supports two modes:
-    1. Database Mode: If NOTION_LECTURE_DB_ID (and optionally NOTION_TASK_DB_ID) are provided.
-    2. Parent Page Mode: If NOTION_PARENT_PAGE_ID is provided, automatically creates child pages
-       with structured blocks and to-do checkboxes.
+    Syncs the analyzed lecture note, detailed reading notes, and bottom concept study articles to Notion.
+    Supports multi-batch block appending when total blocks exceed Notion's 100-block per request limit.
     """
     token = os.environ.get("NOTION_TOKEN", "").strip()
     if not token:
@@ -553,7 +601,7 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
                             "content": (
                                 f"📅 강의 녹음 일자: {date_with_day}\n"
                                 f"🎓 강좌명: {analysis['course_name']} | 원본 파일: {Path(analysis.get('source_file', '')).name}\n\n"
-                                f"📌 핵심 요약:\n{analysis['summary_3lines'][:1600]}"
+                                f"📌 강의 전체 개요:\n{analysis['summary_3lines'][:1600]}"
                             )
                         },
                     }
@@ -585,7 +633,7 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
             {
                 "object": "block",
                 "type": "heading_2",
-                "heading_2": {"rich_text": [{"type": "text", "text": {"content": "⭐ 교수님 강조 & 시험 포인트"}}]},
+                "heading_2": {"rich_text": [{"type": "text", "text": {"content": "⭐ 교수님 강조 & 국가고시/시험 포인트"}}]},
             }
         )
         for emp in analysis["exam_and_emphasis"]:
@@ -603,11 +651,11 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
         {
             "object": "block",
             "type": "heading_2",
-            "heading_2": {"rich_text": [{"type": "text", "text": {"content": "📖 상세 강의 노트"}}]},
+            "heading_2": {"rich_text": [{"type": "text", "text": {"content": "📖 리마인드를 위한 섹션별 상세 강의록"}}]},
         }
     )
 
-    for sec in analysis.get("detailed_notes", [])[:25]:
+    for sec in analysis.get("detailed_notes", []):
         ts = f" ({sec['timestamp_hint']})" if sec.get("timestamp_hint") else ""
         children.append(
             {
@@ -618,22 +666,77 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
                 },
             }
         )
-        content_text = sec["content"]
-        for i in range(0, len(content_text), 1800):
+        append_paragraph_chunks(children, sec["content"])
+
+    if analysis.get("key_terms"):
+        children.append(
+            {
+                "object": "block",
+                "type": "heading_2",
+                "heading_2": {"rich_text": [{"type": "text", "text": {"content": "🔑 주요 전공 용어 체크"}}]},
+            }
+        )
+        for kt in analysis["key_terms"]:
             children.append(
                 {
                     "object": "block",
-                    "type": "paragraph",
-                    "paragraph": {
-                        "rich_text": [{"type": "text", "text": {"content": content_text[i : i + 1800]}}]
+                    "type": "bulleted_list_item",
+                    "bulleted_list_item": {
+                        "rich_text": [
+                            {"type": "text", "text": {"content": f"{kt['term']}: {kt['definition']}"[:1900]}}
+                        ]
                     },
                 }
             )
 
+    if analysis.get("concept_articles"):
+        children.append({"object": "block", "type": "divider", "divider": {}})
+        children.append(
+            {
+                "object": "block",
+                "type": "heading_1",
+                "heading_1": {
+                    "rich_text": [
+                        {
+                            "type": "text",
+                            "text": {"content": "📚 강의 핵심 개념 심화 아티클 (Study Articles)"},
+                        }
+                    ]
+                },
+            }
+        )
+        for art in analysis["concept_articles"]:
+            children.append(
+                {
+                    "object": "block",
+                    "type": "heading_2",
+                    "heading_2": {
+                        "rich_text": [{"type": "text", "text": {"content": art["article_title"][:1900]}}]
+                    },
+                }
+            )
+            children.append(
+                {
+                    "object": "block",
+                    "type": "callout",
+                    "callout": {
+                        "icon": {"type": "emoji", "emoji": "💡"},
+                        "rich_text": [
+                            {
+                                "type": "text",
+                                "text": {"content": f"핵심 학습 포인트: {art['why_important']}"[:1800]},
+                            }
+                        ],
+                    },
+                }
+            )
+            append_paragraph_chunks(children, art["article_body"])
+
     page_title = f"📅 {rec_date_str} | [{analysis['course_name']}] {analysis['lecture_title']}"
     created_url = None
+    created_page_id = None
 
-    # Create lecture page in Database or Parent Page
+    # Create lecture page in Database or Parent Page with first 95 blocks
     if lecture_db_id:
         payload = {
             "parent": {"database_id": lecture_db_id},
@@ -646,14 +749,14 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
         resp = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload, timeout=30)
         if resp.ok:
             created_url = resp.json().get("url")
+            created_page_id = resp.json().get("id")
             print(f"[INFO] Created Notion Lecture DB page: {created_url}")
         else:
             print(f"[WARN] Notion Lecture DB insert failed ({resp.status_code}): {resp.text}")
 
     elif parent_page_id:
-        # Automatically find or create a dedicated Course Folder sub-page inside parent_page_id
         course_folder_page_id = parent_page_id
-        course_folder_title = f"📁 [{analysis['course_name']}] 강의 노트 폴더"
+        course_folder_title = f"📂 [{analysis['course_name']}] 강의 노트 폴더"
         try:
             blocks_resp = requests.get(
                 f"https://api.notion.com/v1/blocks/{parent_page_id}/children?page_size=100",
@@ -698,9 +801,23 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
         resp = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload, timeout=30)
         if resp.ok:
             created_url = resp.json().get("url")
+            created_page_id = resp.json().get("id")
             print(f"[INFO] Created Notion child page inside course folder: {created_url}")
         else:
             print(f"[WARN] Notion parent page insert failed ({resp.status_code}): {resp.text}")
+
+    # Append remaining blocks in batches of 90 if the long-form lecture notes & articles exceed 95 blocks
+    if created_page_id and len(children) > 95:
+        for offset in range(95, len(children), 90):
+            batch = children[offset : offset + 90]
+            app_resp = requests.patch(
+                f"https://api.notion.com/v1/blocks/{created_page_id}/children",
+                headers=headers,
+                json={"children": batch},
+                timeout=30,
+            )
+            if not app_resp.ok:
+                print(f"[WARN] Notion block append failed at offset {offset}: {app_resp.text}")
 
     # Optional: Also insert individual tasks into a separate Notion Task DB if configured
     if task_db_id and analysis.get("action_items"):
@@ -1073,6 +1190,7 @@ def main() -> None:
         return
 
     print(f"[INFO] Found {len(files)} new recording(s) to analyze.")
+    newly_processed_dates = set()
 
     for file_path in files:
         print(f"\n==================== Processing: {file_path.name} ====================")
@@ -1095,11 +1213,13 @@ def main() -> None:
                 "exam_and_emphasis": analysis.get("exam_and_emphasis", []),
                 "key_terms": analysis.get("key_terms", []),
                 "detailed_notes": analysis.get("detailed_notes", []),
+                "concept_articles": analysis.get("concept_articles", []),
                 "note_path": str(md_path.relative_to(ROOT_DIR)),
                 "notion_url": notion_url,
                 "processed_at": datetime.now(KST).isoformat(),
             }
             state["lectures"].insert(0, lecture_entry)
+            newly_processed_dates.add((analysis["course_name"], analysis["recorded_date"]))
 
             for idx, item in enumerate(analysis.get("action_items", [])):
                 task_entry = {
@@ -1137,9 +1257,204 @@ def main() -> None:
         except Exception as e:
             print(f"[ERROR] Failed to process {file_path.name}: {e}")
 
+    # For any date+course where multiple recordings exist on the same day, create a consolidated Daily Study Article
+    for c_name, r_date in sorted(newly_processed_dates):
+        same_day_lectures = [
+            lec
+            for lec in state.get("lectures", [])
+            if lec.get("course_name") == c_name and lec.get("recorded_date") == r_date
+        ]
+        if len(same_day_lectures) >= 2:
+            sync_daily_consolidated_article(c_name, r_date, same_day_lectures)
+
     update_ics_calendar(state)
     save_state(state)
     print("\n[SUCCESS] Batch processing finished!")
+
+
+def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectures: List[Dict[str, Any]]) -> None:
+    """
+    When multiple lecture recordings (e.g., 1교시, 2교시, 3교시) are recorded on the same day,
+    combines all of that day's lecture contents and concept articles into one comprehensive
+    A4 2~4+ page Daily Master Study Article page in Notion inside the course folder.
+    """
+    token = os.environ.get("NOTION_TOKEN", "").strip()
+    if not token:
+        return
+
+    parent_page_id = os.environ.get("NOTION_PARENT_PAGE_ID", "").strip() or "424c5c90104580a8a342d929114d2402"
+    if "notion." in parent_page_id:
+        m = re.search(r"([0-9a-fA-F]{32})", parent_page_id.replace("-", ""))
+        if m:
+            parent_page_id = m.group(1)
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+    }
+
+    weekday_names = ["월", "화", "수", "목", "금", "토", "일"]
+    try:
+        dt_obj = datetime.strptime(recorded_date, "%Y-%m-%d")
+        date_with_day = f"{recorded_date} ({weekday_names[dt_obj.weekday()]}요일)"
+    except ValueError:
+        date_with_day = recorded_date
+
+    # Locate course folder page
+    course_folder_page_id = parent_page_id
+    try:
+        blocks_resp = requests.get(
+            f"https://api.notion.com/v1/blocks/{parent_page_id}/children?page_size=100",
+            headers=headers,
+            timeout=20,
+        )
+        if blocks_resp.ok:
+            for blk in blocks_resp.json().get("results", []):
+                if blk.get("type") == "child_page":
+                    cp_title = blk.get("child_page", {}).get("title", "")
+                    if course_name.lower() in cp_title.lower():
+                        course_folder_page_id = blk["id"]
+                        break
+    except Exception:
+        pass
+
+    ordered_lectures = list(reversed(lectures))
+    titles_joined = " / ".join(lec["lecture_title"] for lec in ordered_lectures)
+
+    children: List[Dict[str, Any]] = [
+        {
+            "object": "block",
+            "type": "callout",
+            "callout": {
+                "icon": {"type": "emoji", "emoji": "📰"},
+                "rich_text": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "content": (
+                                f"📅 강의 일자: {date_with_day} (하루 전체 강의 통합본 — 총 {len(ordered_lectures)}개 녹음 취합)\n"
+                                f"🎓 강좌명: {course_name}\n"
+                                f"📚 포함 강의: {titles_joined[:1400]}"
+                            )
+                        },
+                    }
+                ],
+            },
+        },
+        {
+            "object": "block",
+            "type": "heading_1",
+            "heading_1": {
+                "rich_text": [
+                    {
+                        "type": "text",
+                        "text": {"content": f"📖 {date_with_day} 하루 강의 전체 흐름 & 통합 리마인드 노트"},
+                    }
+                ]
+            },
+        },
+    ]
+
+    for idx, lec in enumerate(ordered_lectures, 1):
+        children.append(
+            {
+                "object": "block",
+                "type": "heading_2",
+                "heading_2": {
+                    "rich_text": [
+                        {"type": "text", "text": {"content": f"[Part {idx}] {lec['lecture_title']}"[:1900]}}
+                    ]
+                },
+            }
+        )
+        append_paragraph_chunks(children, lec.get("summary_3lines", ""))
+        for sec in lec.get("detailed_notes", []):
+            ts = f" ({sec['timestamp_hint']})" if sec.get("timestamp_hint") else ""
+            children.append(
+                {
+                    "object": "block",
+                    "type": "heading_3",
+                    "heading_3": {
+                        "rich_text": [{"type": "text", "text": {"content": f"• {sec['section_title']}{ts}"[:1900]}}]
+                    },
+                }
+            )
+            append_paragraph_chunks(children, sec.get("content", ""))
+
+    children.append({"object": "block", "type": "divider", "divider": {}})
+    children.append(
+        {
+            "object": "block",
+            "type": "heading_1",
+            "heading_1": {
+                "rich_text": [
+                    {
+                        "type": "text",
+                        "text": {"content": f"📚 {date_with_day} 오늘 공부해야 할 핵심 개념 종합 심화 아티클 (A4 장문 독해용)"},
+                    }
+                ]
+            },
+        }
+    )
+
+    art_count = 0
+    for lec in ordered_lectures:
+        for art in lec.get("concept_articles", []):
+            art_count += 1
+            children.append(
+                {
+                    "object": "block",
+                    "type": "heading_2",
+                    "heading_2": {
+                        "rich_text": [
+                            {
+                                "type": "text",
+                                "text": {"content": f"Article {art_count}. {art['article_title']}"[:1900]},
+                            }
+                        ]
+                    },
+                }
+            )
+            children.append(
+                {
+                    "object": "block",
+                    "type": "callout",
+                    "callout": {
+                        "icon": {"type": "emoji", "emoji": "💡"},
+                        "rich_text": [
+                            {
+                                "type": "text",
+                                "text": {"content": f"핵심 학습 & 국시 포인트: {art['why_important']}"[:1800]},
+                            }
+                        ],
+                    },
+                }
+            )
+            append_paragraph_chunks(children, art.get("article_body", ""))
+
+    page_title = f"📰 {recorded_date} (하루 통합 심화 아티클) | [{course_name}] 총 {len(ordered_lectures)}강 종합본"
+    payload = {
+        "parent": {"page_id": course_folder_page_id},
+        "icon": {"type": "emoji", "emoji": "📰"},
+        "properties": {
+            "title": {"title": [{"text": {"content": page_title}}]},
+        },
+        "children": children[:95],
+    }
+    resp = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload, timeout=30)
+    if resp.ok:
+        created_page_id = resp.json().get("id")
+        print(f"[INFO] Created Daily Consolidated Study Article in Notion: {resp.json().get('url')}")
+        if created_page_id and len(children) > 95:
+            for offset in range(95, len(children), 90):
+                batch = children[offset : offset + 90]
+                requests.patch(
+                    f"https://api.notion.com/v1/blocks/{created_page_id}/children",
+                    headers=headers,
+                    json={"children": batch},
+                    timeout=30,
+                )
 
 
 if __name__ == "__main__":
