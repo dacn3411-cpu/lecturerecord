@@ -728,29 +728,13 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
             print(f"[WARN] Failed to fetch public Drive folder {current_folder_id}: {e}")
             return
 
-        # Match each flip-entry block
-        entry_blocks = re.findall(
-            r'<div class="flip-entry" id="entry-([a-zA-Z0-9_-]+)"[^>]*>(.*?)</div></div></div>',
-            html,
-            re.S,
-        )
-        if not entry_blocks:
-            # Fallback broader pattern
-            entry_blocks = re.findall(
-                r'id="entry-([a-zA-Z0-9_-]+)".*?<div class="flip-entry-title">([^<]+)</div>',
-                html,
-                re.S,
-            )
-            for f_id, title in entry_blocks:
-                process_public_entry(f_id, title.strip(), "", course_prefix)
-            return
-
-        for f_id, block_html in entry_blocks:
-            title_m = re.search(r'<div class="flip-entry-title">([^<]+)</div>', block_html)
-            if not title_m:
-                continue
-            title = title_m.group(1).strip()
-            process_public_entry(f_id, title, block_html, course_prefix)
+        # Split by each flip-entry block
+        parts = html.split('<div class="flip-entry"')
+        for part in parts[1:]:
+            id_m = re.search(r'id="entry-([a-zA-Z0-9_-]+)"', part)
+            title_m = re.search(r'<div class="flip-entry-title">([^<]+)</div>', part)
+            if id_m and title_m:
+                process_public_entry(id_m.group(1), title_m.group(1).strip(), part, course_prefix)
 
     def process_public_entry(f_id: str, f_name: str, block_html: str, course_prefix: str) -> None:
         if "drive.google.com/drive/folders/" in block_html or (not Path(f_name).suffix and "." not in f_name):
