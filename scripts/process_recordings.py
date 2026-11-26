@@ -776,6 +776,28 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
         else:
             print(f"[WARN] Notion parent page insert failed ({resp.status_code}): {resp.text}")
 
+        # Clean up any legacy pages inside course_folder_page_id that were created before the new format
+        try:
+            sub_resp = requests.get(
+                f"https://api.notion.com/v1/blocks/{course_folder_page_id}/children?page_size=100",
+                headers=headers,
+                timeout=20,
+            )
+            if sub_resp.ok:
+                for blk in sub_resp.json().get("results", []):
+                    if blk.get("type") == "child_page":
+                        cp_title = blk.get("child_page", {}).get("title", "")
+                        if cp_title.startswith("[") and not cp_title.startswith(("📝", "📚", "📅")):
+                            requests.patch(
+                                f"https://api.notion.com/v1/pages/{blk['id']}",
+                                headers=headers,
+                                json={"archived": True},
+                                timeout=15,
+                            )
+                            print(f"[INFO] Archived old format Notion page: {cp_title}")
+        except Exception:
+            pass
+
     # Append remaining blocks in batches of 90 if the long-form lecture notes exceed 95 blocks
     if created_page_id and len(children) > 95:
         for offset in range(95, len(children), 90):
