@@ -90,7 +90,7 @@ def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[st
     stem = file_path.stem
     course = override_course.strip() or course_from_dir
 
-    # Try prefix pattern: [Course] Title or Course_Date
+    # Try prefix pattern: [Course] Title, Course_Date, or "ADL 10" (Course Name + number)
     if not course:
         bracket_match = re.match(r"^\[([^\]]+)\]\s*(.*)$", stem)
         if bracket_match:
@@ -100,6 +100,12 @@ def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[st
             first_part = stem.split("_")[0].strip()
             if not re.match(r"^(음성|녹음|Voice|Record|\d+)$", first_part, re.IGNORECASE):
                 course = first_part
+        else:
+            space_num_match = re.match(r"^([A-Za-z가-힣]+)\s+(\d+.*)$", stem)
+            if space_num_match:
+                first_word = space_num_match.group(1).strip()
+                if not re.match(r"^(음성|녹음|Voice|Record|강의)$", first_word, re.IGNORECASE):
+                    course = first_word
 
     # Try extracting date from filename (YYYY-MM-DD, YYYYMMDD, YYMMDD)
     now_kst = datetime.now(KST)
@@ -245,18 +251,29 @@ def analyze_audio_with_gemini(file_path: Path, meta: Dict[str, str]) -> Dict[str
         ],
     }
 
-    print("[INFO] Running Gemini 2.5 Flash audio analysis...")
+    candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.0-flash", "gemini-2.5-flash"]
+    result = None
+    last_err = None
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=[uploaded_file, prompt],
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=response_schema,
-                temperature=0.2,
-            ),
-        )
-        result = json.loads(response.text)
+        for model_name in candidate_models:
+            try:
+                print(f"[INFO] Running {model_name} audio analysis...")
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=[uploaded_file, prompt],
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=response_schema,
+                        temperature=0.2,
+                    ),
+                )
+                result = json.loads(response.text)
+                break
+            except Exception as err:
+                last_err = err
+                print(f"[WARN] Model {model_name} failed: {err}")
+        if result is None:
+            raise RuntimeError(f"All Gemini models failed. Last error: {last_err}")
     finally:
         try:
             client.files.delete(name=uploaded_file.name)
@@ -465,8 +482,44 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
             print(f"[WARN] Notion Lecture DB insert failed ({resp.status_code}): {resp.text}")
 
     elif parent_page_id:
+        # Automatically find or create a dedicated Course Folder sub-page inside parent_page_id
+        course_folder_page_id = parent_page_id
+        course_folder_title = f"📁 [{analysis['course_name']}] 강의 노트 폴더"
+        try:
+            blocks_resp = requests.get(
+                f"https://api.notion.com/v1/blocks/{parent_page_id}/children?page_size=100",
+                headers=headers,
+                timeout=20,
+            )
+            if blocks_resp.ok:
+                found_subpage = None
+                for blk in blocks_resp.json().get("results", []):
+                    if blk.get("type") == "child_page":
+                        cp_title = blk.get("child_page", {}).get("title", "")
+                        if analysis["course_name"].lower() in cp_title.lower():
+                            found_subpage = blk["id"]
+                            break
+                if found_subpage:
+                    course_folder_page_id = found_subpage
+                else:
+                    folder_payload = {
+                        "parent": {"page_id": parent_page_id},
+                        "icon": {"type": "emoji", "emoji": "📂"},
+                        "properties": {
+                            "title": {"title": [{"text": {"content": course_folder_title}}]},
+                        },
+                    }
+                    f_resp = requests.post(
+                        "https://api.notion.com/v1/pages", headers=headers, json=folder_payload, timeout=20
+                    )
+                    if f_resp.ok:
+                        course_folder_page_id = f_resp.json()["id"]
+                        print(f"[INFO] Created Notion course folder page: {course_folder_title}")
+        except Exception as e:
+            print(f"[WARN] Could not resolve course subfolder in Notion, using root page: {e}")
+
         payload = {
-            "parent": {"page_id": parent_page_id},
+            "parent": {"page_id": course_folder_page_id},
             "icon": {"type": "emoji", "emoji": "📝"},
             "properties": {
                 "title": {"title": [{"text": {"content": page_title}}]},
@@ -476,7 +529,7 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
         resp = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload, timeout=30)
         if resp.ok:
             created_url = resp.json().get("url")
-            print(f"[INFO] Created Notion child page: {created_url}")
+            print(f"[INFO] Created Notion child page inside course folder: {created_url}")
         else:
             print(f"[WARN] Notion parent page insert failed ({resp.status_code}): {resp.text}")
 
