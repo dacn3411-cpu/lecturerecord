@@ -142,6 +142,22 @@ def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[st
     stem = file_path.stem
     course = override_course.strip() or course_from_dir
 
+    # Try extracting date from filename (YYYY-MM-DD, YYYYMMDD, YYMMDD) first
+    now_kst = datetime.now(KST)
+    recorded_date = now_kst.strftime("%Y-%m-%d")
+
+    date_match_4 = re.search(r"(20\d{2})[-_.]?(0[1-9]|1[0-2])[-_.]?(0[1-9]|[12]\d|3[01])", stem)
+    if date_match_4:
+        recorded_date = f"{date_match_4.group(1)}-{date_match_4.group(2)}-{date_match_4.group(3)}"
+        # Remove leading date prefix if present (e.g., "2026-11-16_ADL 10")
+        stem_without_date = re.sub(r"^20\d{2}[-_.]?\d{2}[-_.]?\d{2}[-_\s]*", "", stem).strip()
+        if stem_without_date:
+            stem = stem_without_date
+    else:
+        date_match_2 = re.search(r"(?<!\d)(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(?!\d)", stem)
+        if date_match_2:
+            recorded_date = f"20{date_match_2.group(1)}-{date_match_2.group(2)}-{date_match_2.group(3)}"
+
     # Try prefix pattern: [Course] Title, Course_Date, or "ADL 10" (Course Name + number)
     if not course:
         bracket_match = re.match(r"^\[([^\]]+)\]\s*(.*)$", stem)
@@ -160,18 +176,6 @@ def parse_course_and_date(file_path: Path, override_course: str = "") -> Dict[st
                     course = first_word
 
     course = normalize_course_name(course)
-
-    # Try extracting date from filename (YYYY-MM-DD, YYYYMMDD, YYMMDD)
-    now_kst = datetime.now(KST)
-    recorded_date = now_kst.strftime("%Y-%m-%d")
-
-    date_match_4 = re.search(r"(20\d{2})[-_.]?(0[1-9]|1[0-2])[-_.]?(0[1-9]|[12]\d|3[01])", stem)
-    if date_match_4:
-        recorded_date = f"{date_match_4.group(1)}-{date_match_4.group(2)}-{date_match_4.group(3)}"
-    else:
-        date_match_2 = re.search(r"(?<!\d)(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(?!\d)", stem)
-        if date_match_2:
-            recorded_date = f"20{date_match_2.group(1)}-{date_match_2.group(2)}-{date_match_2.group(3)}"
 
     return {
         "course": course or "미분류 강좌",
@@ -527,18 +531,30 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
         if m:
             parent_page_id = m.group(1)
 
-    # Build rich children blocks for the lecture page
+    weekday_names = ["월", "화", "수", "목", "금", "토", "일"]
+    rec_date_str = analysis["recorded_date"]
+    try:
+        dt_obj = datetime.strptime(rec_date_str, "%Y-%m-%d")
+        date_with_day = f"{rec_date_str} ({weekday_names[dt_obj.weekday()]}요일)"
+    except ValueError:
+        date_with_day = rec_date_str
+
+    # Build rich children blocks for the lecture page (with prominent Date header at top)
     children: List[Dict[str, Any]] = [
         {
             "object": "block",
             "type": "callout",
             "callout": {
-                "icon": {"type": "emoji", "emoji": "🎓"},
+                "icon": {"type": "emoji", "emoji": "📅"},
                 "rich_text": [
                     {
                         "type": "text",
                         "text": {
-                            "content": f"[{analysis['course_name']}] {analysis['recorded_date']} 강의 핵심 요약\n\n{analysis['summary_3lines'][:1800]}"
+                            "content": (
+                                f"📅 강의 녹음 일자: {date_with_day}\n"
+                                f"🎓 강좌명: {analysis['course_name']} | 원본 파일: {Path(analysis.get('source_file', '')).name}\n\n"
+                                f"📌 핵심 요약:\n{analysis['summary_3lines'][:1600]}"
+                            )
                         },
                     }
                 ],
@@ -614,7 +630,7 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
                 }
             )
 
-    page_title = f"[{analysis['course_name']}] {analysis['lecture_title']} ({analysis['recorded_date']})"
+    page_title = f"📅 {rec_date_str} | [{analysis['course_name']}] {analysis['lecture_title']}"
     created_url = None
 
     # Create lecture page in Database or Parent Page
@@ -942,6 +958,28 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
             if id_m and title_m:
                 process_public_entry(id_m.group(1), title_m.group(1).strip(), part, course_prefix)
 
+    def parse_drive_mod_date(block_html: str) -> str:
+        mod_m = re.search(r'<div class="flip-entry-last-modified"><div>([^<]+)</div>', block_html)
+        if not mod_m:
+            return datetime.now(KST).strftime("%Y-%m-%d")
+        raw_mod = mod_m.group(1).strip()
+        now_kst = datetime.now(KST)
+        # Format like "Nov 16", "Oct 26"
+        for fmt in ["%b %d", "%B %d"]:
+            try:
+                parsed = datetime.strptime(raw_mod, fmt)
+                return f"{now_kst.year}-{parsed.month:02d}-{parsed.day:02d}"
+            except ValueError:
+                pass
+        # Format like "2026. 11. 16." or "11/16/26"
+        m_ymd = re.search(r"(\d{2,4})[./-\s]+(\d{1,2})[./-\s]+(\d{1,2})", raw_mod)
+        if m_ymd:
+            y = int(m_ymd.group(1))
+            if y < 100:
+                y += 2000
+            return f"{y:04d}-{int(m_ymd.group(2)):02d}-{int(m_ymd.group(3)):02d}"
+        return now_kst.strftime("%Y-%m-%d")
+
     def process_public_entry(f_id: str, f_name: str, block_html: str, course_prefix: str) -> None:
         if "drive.google.com/drive/folders/" in block_html or (not Path(f_name).suffix and "." not in f_name):
             # It's a subfolder (e.g., course folder)
@@ -952,11 +990,16 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
         if ext not in SUPPORTED_EXTENSIONS or f_id in downloaded_drive_ids:
             return
 
+        mod_date_str = parse_drive_mod_date(block_html)
+        local_filename = f_name
+        if not re.search(r"20\d{2}[-_.]?\d{2}[-_.]?\d{2}", f_name):
+            local_filename = f"{mod_date_str}_{f_name}"
+
         target_dir = RECORDINGS_DIR / course_prefix if course_prefix else RECORDINGS_DIR
         target_dir.mkdir(parents=True, exist_ok=True)
-        local_path = target_dir / f_name
+        local_path = target_dir / local_filename
 
-        print(f"[INFO] Downloading new recording from shared Google Drive folder: {f_name} (ID: {f_id})")
+        print(f"[INFO] Downloading new recording from shared Google Drive folder: {f_name} (Date: {mod_date_str}, ID: {f_id})")
         dl_url = f"https://drive.usercontent.google.com/download?id={f_id}&export=download&confirm=t"
         try:
             with requests.get(dl_url, stream=True, timeout=120) as r:
@@ -967,10 +1010,11 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
                             f.write(chunk)
             downloaded_drive_ids[f_id] = {
                 "name": f_name,
+                "recorded_date": mod_date_str,
                 "course": course_prefix,
                 "downloaded_at": datetime.now(KST).isoformat(),
             }
-            print(f"[INFO] Successfully downloaded {f_name} ({local_path.stat().st_size} bytes)")
+            print(f"[INFO] Successfully downloaded {local_filename} ({local_path.stat().st_size} bytes)")
         except Exception as e:
             print(f"[WARN] Failed to download file {f_name} ({f_id}): {e}")
 

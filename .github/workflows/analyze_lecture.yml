@@ -22,6 +22,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: lecture-analyzer
+  cancel-in-progress: false
+
 jobs:
   analyze_and_sync:
     runs-on: ubuntu-latest
