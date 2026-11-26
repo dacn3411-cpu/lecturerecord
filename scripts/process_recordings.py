@@ -518,7 +518,7 @@ def ensure_notion_course_folders() -> Dict[str, str]:
             if matched_id:
                 course_map[course] = matched_id
             else:
-                folder_title = f"📂 [{course}] 강의 노트 폴더"
+                folder_title = f"[{course}]"
                 folder_payload = {
                     "parent": {"page_id": parent_page_id},
                     "icon": {"type": "emoji", "emoji": "📂"},
@@ -690,19 +690,39 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
                 }
             )
 
-    # Individual lecture notes contain the detailed reading notes, to-dos, exam points, and key terms.
-    # The in-depth concept study articles are generated in a separate standalone Notion page per day!
+    # Format title concisely for mobile screens: "MM/DD N주차 제목" (e.g., "10/26 1주차 뇌졸중 환자의 ADL")
     try:
-        dt_short = datetime.strptime(rec_date_str, "%Y-%m-%d").strftime("%y년 %m월 %d일")
+        dt_mmdd = datetime.strptime(rec_date_str, "%Y-%m-%d").strftime("%m/%d")
     except ValueError:
-        dt_short = rec_date_str
+        dt_mmdd = rec_date_str[-5:].replace("-", "/")
 
     raw_file_stem = Path(analysis.get("source_file", "")).stem
     raw_file_stem = re.sub(r"^20\d{2}[-_.]?\d{2}[-_.]?\d{2}[-_\s]*", "", raw_file_stem).strip()
     num_m = re.search(r"(\d+)", raw_file_stem)
-    lec_num_tag = f"강의{num_m.group(1)}" if num_m else "강의"
+    file_num = num_m.group(1) if num_m else ""
 
-    page_title = f"📝 {dt_short} {lec_num_tag} — {analysis['lecture_title']}"
+    clean_title = analysis["lecture_title"].strip()
+    # Strip leading [과목명] or date if Gemini included it
+    clean_title = re.sub(r"^\[[^\]]+\]\s*", "", clean_title)
+    clean_title = re.sub(r"^\d{2,4}년\s*\d{1,2}월\s*\d{1,2}일\s*", "", clean_title)
+
+    # Extract or normalize "N주차" at the start of clean_title
+    week_m = re.match(r"^(\d+)\s*(?:주차|강)\s*[-—:]?\s*(.*)$", clean_title)
+    if week_m:
+        week_tag = f"{week_m.group(1)}주차"
+        subject_body = week_m.group(2).strip()
+    elif file_num:
+        week_tag = f"{file_num}주차"
+        subject_body = clean_title
+    else:
+        week_tag = ""
+        subject_body = clean_title
+
+    if week_tag:
+        page_title = f"{dt_mmdd} {week_tag} {subject_body}".strip()
+    else:
+        page_title = f"{dt_mmdd} {subject_body}".strip()
+
     created_url = None
     created_page_id = None
 
@@ -726,7 +746,7 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
 
     elif parent_page_id:
         course_folder_page_id = parent_page_id
-        course_folder_title = f"📂 [{analysis['course_name']}] 강의 노트 폴더"
+        course_folder_title = f"[{analysis['course_name']}]"
         try:
             blocks_resp = requests.get(
                 f"https://api.notion.com/v1/blocks/{parent_page_id}/children?page_size=100",
@@ -775,28 +795,6 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
             print(f"[INFO] Created Notion child page inside course folder: {created_url}")
         else:
             print(f"[WARN] Notion parent page insert failed ({resp.status_code}): {resp.text}")
-
-        # Clean up any legacy pages inside course_folder_page_id that were created before the new format
-        try:
-            sub_resp = requests.get(
-                f"https://api.notion.com/v1/blocks/{course_folder_page_id}/children?page_size=100",
-                headers=headers,
-                timeout=20,
-            )
-            if sub_resp.ok:
-                for blk in sub_resp.json().get("results", []):
-                    if blk.get("type") == "child_page":
-                        cp_title = blk.get("child_page", {}).get("title", "")
-                        if cp_title.startswith("[") and not cp_title.startswith(("📝", "📚", "📅")):
-                            requests.patch(
-                                f"https://api.notion.com/v1/pages/{blk['id']}",
-                                headers=headers,
-                                json={"archived": True},
-                                timeout=15,
-                            )
-                            print(f"[INFO] Archived old format Notion page: {cp_title}")
-        except Exception:
-            pass
 
     # Append remaining blocks in batches of 90 if the long-form lecture notes exceed 95 blocks
     if created_page_id and len(children) > 95:
@@ -1173,10 +1171,12 @@ def main() -> None:
 
     ensure_local_course_folders()
     ensure_notion_course_folders()
+    cleanup_and_rename_existing_notion_pages()
     pull_from_google_drive(state)
     files = find_unprocessed_files(state, target_file)
     if not files:
         print("[INFO] No new unprocessed audio files found in recordings/.")
+        cleanup_and_rename_existing_notion_pages()
         update_ics_calendar(state)
         save_state(state)
         return
@@ -1247,6 +1247,7 @@ def main() -> None:
 
             update_ics_calendar(state)
             save_state(state)
+            cleanup_and_rename_existing_notion_pages()
         except Exception as e:
             print(f"[ERROR] Failed to process {file_path.name}: {e}")
 
@@ -1260,6 +1261,7 @@ def main() -> None:
         if same_day_lectures:
             sync_daily_consolidated_article(c_name, r_date, same_day_lectures)
 
+    cleanup_and_rename_existing_notion_pages()
     update_ics_calendar(state)
     save_state(state)
     print("\n[SUCCESS] Batch processing finished!")
@@ -1398,7 +1400,12 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
             )
             append_paragraph_chunks(children, art.get("article_body", ""))
 
-    page_title = f"📚 {dt_short} 핵심 심화 아티클 (강의 {lec_nums_str} 통합)"
+    try:
+        dt_mmdd = datetime.strptime(recorded_date, "%Y-%m-%d").strftime("%m/%d")
+    except ValueError:
+        dt_mmdd = recorded_date[-5:].replace("-", "/")
+
+    page_title = f"{dt_mmdd} 핵심 아티클 ({lec_nums_str}주차)"
     payload = {
         "parent": {"page_id": course_folder_page_id},
         "icon": {"type": "emoji", "emoji": "📚"},
@@ -1420,6 +1427,156 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
                     json={"children": batch},
                     timeout=30,
                 )
+
+
+def format_concise_notion_title(old_title: str) -> Optional[str]:
+    """
+    Converts verbose legacy titles like:
+    - `📝 26년 10월 26일 강의1 — 뇌졸중 환자의 일상생활활동` -> `10/26 1주차 뇌졸중 환자의 일상생활활동`
+    - `📝 26년 10월 26일 강의2 — 10주차 - 상하지 ...` -> `10/26 2주차 상하지 ...`
+    - `[일상생활활동] 11강 - 류마티스 관절염(RA)과 ...` -> `11/16 11주차 류마티스 관절염(RA)과 ...`
+    - `📚 26년 11월 16일 핵심 심화 아티클 (강의 10, 11, 12 통합)` -> `11/16 핵심 아티클 (10, 11, 12주차)`
+    """
+    t = old_title.strip()
+
+    # Case 1: Daily Core Article
+    m_art = re.match(r"^[📚📰\s]*(\d{2})년\s*(\d{1,2})월\s*(\d{1,2})일\s*핵심.*?\((?:강의\s*)?([^)]+?)(?:\s*통합|\s*종합)?\)$", t)
+    if m_art:
+        mm = int(m_art.group(2))
+        dd = int(m_art.group(3))
+        nums = m_art.group(4).strip()
+        return f"{mm:02d}/{dd:02d} 핵심 아티클 ({nums}주차)"
+
+    # Case 2: "📝 26년 10월 26일 강의2 — 10주차 - 제목"
+    m_new = re.match(r"^[📝📅\s]*\d{2,4}년\s*(\d{1,2})월\s*(\d{1,2})일\s*강의(\d+)?\s*[-—|:]\s*(.*)$", t)
+    if m_new:
+        mm = int(m_new.group(1))
+        dd = int(m_new.group(2))
+        lec_num = m_new.group(3) or ""
+        rest = m_new.group(4).strip()
+        # Strip duplicate "10주차 -" if we already have lec_num, or use it if lec_num is missing
+        m_wk = re.match(r"^(\d+)\s*(?:주차|강)\s*[-—:]?\s*(.*)$", rest)
+        if m_wk:
+            if not lec_num:
+                lec_num = m_wk.group(1)
+            rest = m_wk.group(2).strip()
+        week_str = f"{lec_num}주차 " if lec_num else ""
+        return f"{mm:02d}/{dd:02d} {week_str}{rest}".strip()
+
+    # Case 3: "📅 2026-11-16 | [일상생활활동] 10주차 - 제목"
+    m_iso = re.match(r"^[📝📅\s]*20\d{2}-(\d{2})-(\d{2})\s*\|\s*\[[^\]]+\]\s*(.*)$", t)
+    if m_iso:
+        mm, dd, rest = m_iso.group(1), m_iso.group(2), m_iso.group(3).strip()
+        m_wk = re.match(r"^(\d+)\s*(?:주차|강)\s*[-—:]?\s*(.*)$", rest)
+        if m_wk:
+            return f"{mm}/{dd} {m_wk.group(1)}주차 {m_wk.group(2).strip()}"
+        return f"{mm}/{dd} {rest}"
+
+    return None
+
+
+def cleanup_and_rename_existing_notion_pages() -> None:
+    """
+    Scans all course folder subpages in Notion and:
+    1. Archives old duplicate first-pass pages (starting with `[과목명] ...`)
+    2. Renames any verbose `📝 26년 00월 00일 강의N — ...` pages into the compact `00/00 0주차 제목` format!
+    3. Renames course folder titles from `📂 [일상생활활동] 강의 노트 폴더` to `[일상생활활동]` so they don't wrap on mobile.
+    """
+    token = os.environ.get("NOTION_TOKEN", "").strip()
+    if not token:
+        return
+
+    parent_page_id = os.environ.get("NOTION_PARENT_PAGE_ID", "").strip() or "424c5c90104580a8a342d929114d2402"
+    if "notion." in parent_page_id:
+        m = re.search(r"([0-9a-fA-F]{32})", parent_page_id.replace("-", ""))
+        if m:
+            parent_page_id = m.group(1)
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+    }
+
+    try:
+        blocks_resp = requests.get(
+            f"https://api.notion.com/v1/blocks/{parent_page_id}/children?page_size=100",
+            headers=headers,
+            timeout=20,
+        )
+        if not blocks_resp.ok:
+            return
+
+        for folder_blk in blocks_resp.json().get("results", []):
+            if folder_blk.get("type") != "child_page":
+                continue
+            folder_id = folder_blk["id"]
+            folder_title = folder_blk.get("child_page", {}).get("title", "")
+
+            # Shorten folder title if it has "강의 노트 폴더"
+            if "강의 노트 폴더" in folder_title:
+                clean_f_title = re.sub(r"^[📂📁\s]*", "", folder_title)
+                clean_f_title = clean_f_title.replace("강의 노트 폴더", "").strip()
+                requests.patch(
+                    f"https://api.notion.com/v1/pages/{folder_id}",
+                    headers=headers,
+                    json={"properties": {"title": {"title": [{"text": {"content": clean_f_title}}]}}},
+                    timeout=15,
+                )
+                print(f"[INFO] Renamed Notion course folder: {folder_title} -> {clean_f_title}")
+
+            # Inspect child lecture pages inside the course folder
+            sub_resp = requests.get(
+                f"https://api.notion.com/v1/blocks/{folder_id}/children?page_size=100",
+                headers=headers,
+                timeout=20,
+            )
+            if not sub_resp.ok:
+                continue
+
+            sub_pages = [b for b in sub_resp.json().get("results", []) if b.get("type") == "child_page"]
+            seen_titles = set()
+
+            # Process newest first so we keep newer pages and archive older duplicates
+            for blk in reversed(sub_pages):
+                p_id = blk["id"]
+                cp_title = blk.get("child_page", {}).get("title", "").strip()
+
+                # Archive old first-pass `[일상생활활동] ...` pages
+                if cp_title.startswith("["):
+                    requests.patch(
+                        f"https://api.notion.com/v1/pages/{p_id}",
+                        headers=headers,
+                        json={"archived": True},
+                        timeout=15,
+                    )
+                    print(f"[INFO] Archived legacy Notion page: {cp_title}")
+                    continue
+
+                new_concise_title = format_concise_notion_title(cp_title)
+                final_title = new_concise_title or cp_title
+
+                if final_title in seen_titles:
+                    requests.patch(
+                        f"https://api.notion.com/v1/pages/{p_id}",
+                        headers=headers,
+                        json={"archived": True},
+                        timeout=15,
+                    )
+                    print(f"[INFO] Archived duplicate Notion page: {cp_title}")
+                    continue
+
+                seen_titles.add(final_title)
+                if new_concise_title and new_concise_title != cp_title:
+                    requests.patch(
+                        f"https://api.notion.com/v1/pages/{p_id}",
+                        headers=headers,
+                        json={"properties": {"title": {"title": [{"text": {"content": new_concise_title}}]}}},
+                        timeout=15,
+                    )
+                    print(f"[INFO] Renamed Notion page: {cp_title} -> {new_concise_title}")
+    except Exception as e:
+        print(f"[WARN] cleanup_and_rename_existing_notion_pages error: {e}")
 
 
 if __name__ == "__main__":
