@@ -1082,12 +1082,17 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
             except ValueError:
                 pass
         # Format like "2026. 11. 16." or "11/16/26"
-        m_ymd = re.search(r"(\d{2,4})[./-\s]+(\d{1,2})[./-\s]+(\d{1,2})", raw_mod)
+        m_ymd = re.search(r"(\d{2,4})[./\s-]+(\d{1,2})[./\s-]+(\d{1,2})", raw_mod)
         if m_ymd:
-            y = int(m_ymd.group(1))
+            g1, g2, g3 = m_ymd.group(1), int(m_ymd.group(2)), int(m_ymd.group(3))
+            if len(g1) == 4:
+                y, mo, d = int(g1), g2, g3  # 2026. 11. 16.
+            else:
+                mo, d, y = int(g1), g2, g3  # 11/16/26 (M/D/YY)
             if y < 100:
                 y += 2000
-            return f"{y:04d}-{int(m_ymd.group(2)):02d}-{int(m_ymd.group(3)):02d}"
+            if 1 <= mo <= 12 and 1 <= d <= 31:
+                return f"{y:04d}-{mo:02d}-{d:02d}"
         return now_kst.strftime("%Y-%m-%d")
 
     def process_public_entry(f_id: str, f_name: str, block_html: str, course_prefix: str) -> None:
@@ -1100,7 +1105,11 @@ def pull_from_google_drive(state: Dict[str, Any]) -> None:
         if ext not in SUPPORTED_EXTENSIONS or f_id in downloaded_drive_ids:
             return
 
-        mod_date_str = parse_drive_mod_date(block_html)
+        try:
+            mod_date_str = parse_drive_mod_date(block_html)
+        except Exception as e:
+            print(f"[WARN] Could not parse modified date for {f_name}, using today: {e}")
+            mod_date_str = datetime.now(KST).strftime("%Y-%m-%d")
         local_filename = f_name
         if not re.search(r"20\d{2}[-_.]?\d{2}[-_.]?\d{2}", f_name):
             local_filename = f"{mod_date_str}_{f_name}"
