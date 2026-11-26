@@ -5,4 +5,1178 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:🎓 강의 과제 & 시험 일정 (AI 자동정리)
 X-WR-TIMEZONE:Asia/Seoul
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 휠체어 포지셔닝 
+ 및 이동 중재 국가고시 예상문제 풀이
+DTSTART;TZID=Asia/Seoul:20261126T225900
+DTEND;TZID=Asia/Seoul:20261126T235900
+DTSTAMP:20261126T074317Z
+UID:4e9989ae25b0_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 휠체어 이동 및 
+ 전동휠체어 작동법\, 경사로/턱 주행 중재 전략 (16차시)
+ \n분류: 과제 | 중요도: 보통\n세부사항: 전공 서적 내 휠
+ 체어 훈련 관련 연습문제를 풀고 오답 노트를 작성하여 
+ 제출 준비할 것.\n노션 노트: https://app.notion.com/p/26-11-23-16
+ -16-424c5c901045816daafde74f3de6a523
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 휠체어 포지셔닝 및 이동 중재 국가고시 예상문제 풀이
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 휠체어 포지셔닝 및 이동 중재 국가고시 예상문제 풀이
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 16차시 휠체어 이
+ 동 훈련 실습 복습
+DTSTART;TZID=Asia/Seoul:20261126T225900
+DTEND;TZID=Asia/Seoul:20261126T235900
+DTSTAMP:20261126T074317Z
+UID:4e9989ae25b0_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 휠체어 이동 및 
+ 전동휠체어 작동법\, 경사로/턱 주행 중재 전략 (16차시)
+ \n분류: 복습/예습 | 중요도: 높음\n세부사항: 강의에서 
+ 다룬 휠체어 평지 주행\, 경사로 오르내리기\, 턱 주행 
+ 기법의 단계별 동작을 실습 노트와 교재를 통해 완벽히 
+ 숙지할 것.\n노션 노트: https://app.notion.com/p/26-11-23-16-16-424
+ c5c901045816daafde74f3de6a523
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 1
+ 6차시 휠체어 이동 훈련 실습 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 16
+ 차시 휠체어 이동 훈련 실습 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [감각과인지재활/일상생활활동] 
+ 국시 대비 휠체어 부속 요소 및 측정 공식 암기 복습
+DTSTART;TZID=Asia/Seoul:20261126T170000
+DTEND;TZID=Asia/Seoul:20261126T180000
+DTSTAMP:20261126T074317Z
+UID:50bf1285087f_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 15
+ 주차 - 휠체어 평가\, 부속 요소 및 접촉 기준과 신체 정
+ 렬\n분류: 복습/예습 | 중요도: 높음\n세부사항: 국가고시
+  빈출 개념인 휠체어 폭 측정 공식(+2~5cm)\, 발판 및 힐 베
+ 이스 조절법\, 척추 변형별 쿠션 적용 지침을 완벽하게 
+ 암기할 것.\n노션 노트: https://app.notion.com/p/26-11-23-15-15-424
+ c5c90104581649597e3b3278490d7
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [감각과인지재활
+ /일상생활활동] 국시 대비 휠체어 부속 요소 및 측정 공
+ 식 암기 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [감각과인지재활/
+ 일상생활활동] 국시 대비 휠체어 부속 요소 및 측정 공
+ 식 암기 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 15주차 휠체어 측
+ 정 및 포지셔닝 실습 보고서 작성
+DTSTART;TZID=Asia/Seoul:20261126T225900
+DTEND;TZID=Asia/Seoul:20261126T235900
+DTSTAMP:20261126T074317Z
+UID:50bf1285087f_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 15
+ 주차 - 휠체어 평가\, 부속 요소 및 접촉 기준과 신체 정
+ 렬\n분류: 과제 | 중요도: 높음\n세부사항: 수업 시간에 
+ 다룬 휠체어 폭\, 깊이\, 등받이 높이 측정 기준을 바탕
+ 으로 가상의 환자(편마비 및 척수손상 환자) 시나리오별
+  적정 휠체어 치수를 계산하고 포지셔닝 계획안을 A4 1장
+  분량으로 작성하여 제출할 것.\n노션 노트: https://app.noti
+ on.com/p/26-11-23-15-15-424c5c90104581649597e3b3278490d7
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 1
+ 5주차 휠체어 측정 및 포지셔닝 실습 보고서 작성
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 15
+ 주차 휠체어 측정 및 포지셔닝 실습 보고서 작성
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 조별 과제(가사활
+ 동 및 ADL 중재 사례 분석) 준비
+DTSTART;TZID=Asia/Seoul:20261130T170000
+DTEND;TZID=Asia/Seoul:20261130T180000
+DTSTAMP:20261126T074317Z
+UID:12fe2f1ec254_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 (ADL
+ ) 14주차: 식사하기\, 가정생활 및 가사활동 중재 전략\n
+ 분류: 과제 | 중요도: 높음\n세부사항: 조별로 환자 사례
+ 를 선정하여 식사하기\, 가사활동\, 주거 환경 수정 방안
+ 을 포함한 중재 계획서를 작성하고 제출하기.\n노션 노
+ 트: https://app.notion.com/p/26-11-23-14-ADL-14-424c5c901045814fb516fef54
+ 88f8073
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 조별 과제(가사활동 및 ADL 중재 사례 분석) 준비
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 조별 과제(가사활동 및 ADL 중재 사례 분석) 준비
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 14주차 강의 내용 
+ 복습 및 핵심 개념 노트 정리
+DTSTART;TZID=Asia/Seoul:20261126T225900
+DTEND;TZID=Asia/Seoul:20261126T235900
+DTSTAMP:20261126T074317Z
+UID:12fe2f1ec254_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 (ADL
+ ) 14주차: 식사하기\, 가정생활 및 가사활동 중재 전략\n
+ 분류: 복습/예습 | 중요도: 높음\n세부사항: 식사하기 및 
+ 가사활동 중재 전략\, 저/고긴장 환자 관리법에 대한 강
+ 의록과 심화 아티클 내용을 꼼꼼히 읽고 요약 정리하기.
+ \n노션 노트: https://app.notion.com/p/26-11-23-14-ADL-14-424c5c9010458
+ 14fb516fef5488f8073
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 1
+ 4주차 강의 내용 복습 및 핵심 개념 노트 정리
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 14
+ 주차 강의 내용 복습 및 핵심 개념 노트 정리
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 14주차 강의 전 피
+ 로 척도(FSS) 및 상지 정렬 관련 전공 용어 예습
+DTSTART;TZID=Asia/Seoul:20261129T080000
+DTEND;TZID=Asia/Seoul:20261129T090000
+DTSTAMP:20261126T074317Z
+UID:a0d0b8519f50_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 13
+ 주차 - 보조도구 및 환경 수정의 생체역학적 원리\n분류:
+  복습/예습 | 중요도: 보통\n세부사항: 다음 주 강의 주제
+ 인 상지 정렬과 관절 보호 기법에 대한 교과서 해당 페
+ 이지를 미리 읽고 주요 용어 정의 정리하기.\n노션 노트:
+  https://app.notion.com/p/26-11-23-13-13-424c5c901045811c9ab3ea60d9983ed6
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 1
+ 4주차 강의 전 피로 척도(FSS) 및 상지 정렬 관련 전공 용
+ 어 예습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 14
+ 주차 강의 전 피로 척도(FSS) 및 상지 정렬 관련 전공 용
+ 어 예습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 13주차 보조도구 
+ 및 환경 수정 적용 사례 분석 과제
+DTSTART;TZID=Asia/Seoul:20261126T225900
+DTEND;TZID=Asia/Seoul:20261126T235900
+DTSTAMP:20261126T074317Z
+UID:a0d0b8519f50_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 13
+ 주차 - 보조도구 및 환경 수정의 생체역학적 원리\n분류:
+  과제 | 중요도: 높음\n세부사항: 관절염 환자의 ADL 수행 
+ 시 에너지 보존 원칙을 적용한 환경 수정 및 보조도구 
+ 처방 계획서를 A4 1장 분량으로 작성하여 제출할 것.\n노
+ 션 노트: https://app.notion.com/p/26-11-23-13-13-424c5c901045811c9ab3ea
+ 60d9983ed6
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 1
+ 3주차 보조도구 및 환경 수정 적용 사례 분석 과제
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 13
+ 주차 보조도구 및 환경 수정 적용 사례 분석 과제
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [국가고시 대비] ADL 보조도구 및 
+ 관절 치환술 관련 기출문제 풀이
+DTSTART;TZID=Asia/Seoul:20261121T225900
+DTEND;TZID=Asia/Seoul:20261121T235900
+DTSTAMP:20261126T074317Z
+UID:485d91e41d24_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 9주차 - 일상생활
+ 활동(ADL) 평가와 도구적 일상생활활동(IADL) 중재: 보조도
+ 구 적용 및 임상적 추론\n분류: 기타 | 중요도: 보통\n세
+ 부사항: 작업치료사 국가고시 문제집에서 일상생활활동
+ (ADL) 파트 중 보조기구 처방 및 정형외과적 수술 후 주의
+ 사항 관련 문제를 최소 30문항 이상 풀고 오답 노트 정리
+ .\n노션 노트: https://app.notion.com/p/26-11-16-9-9-ADL-IADL-424c5c901
+ 04581178d16cacadeea8c26
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [국가고시 대비] 
+ ADL 보조도구 및 관절 치환술 관련 기출문제 풀이
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [국가고시 대비] A
+ DL 보조도구 및 관절 치환술 관련 기출문제 풀이
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] THR 환자 ADL 중재 
+ 프로토콜 시뮬레이션 과제 준비
+DTSTART;TZID=Asia/Seoul:20261123T170000
+DTEND;TZID=Asia/Seoul:20261123T180000
+DTSTAMP:20261126T074317Z
+UID:485d91e41d24_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 9주차 - 일상생활
+ 활동(ADL) 평가와 도구적 일상생활활동(IADL) 중재: 보조도
+ 구 적용 및 임상적 추론\n분류: 과제 | 중요도: 높음\n세
+ 부사항: 고관절 인공관절 치환술 환자가 침대에서 일어
+ 나 세면 및 착탈의를 수행하는 과정을 가정하여 적응 도
+ 구(드레싱 스틱\, 리처 등) 활용법을 포함한 3페이지 분
+ 량의 프로토콜 레포트 작성 및 제출.\n노션 노트: https://a
+ pp.notion.com/p/26-11-16-9-9-ADL-IADL-424c5c90104581178d16cacadeea8c26
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] T
+ HR 환자 ADL 중재 프로토콜 시뮬레이션 과제 준비
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] TH
+ R 환자 ADL 중재 프로토콜 시뮬레이션 과제 준비
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 9주차 강의 복습 
+ 및 보조도구 적용 사례 정리
+DTSTART;TZID=Asia/Seoul:20261119T225900
+DTEND;TZID=Asia/Seoul:20261119T235900
+DTSTAMP:20261126T074317Z
+UID:485d91e41d24_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 9주차 - 일상생활
+ 활동(ADL) 평가와 도구적 일상생활활동(IADL) 중재: 보조도
+ 구 적용 및 임상적 추론\n분류: 복습/예습 | 중요도: 높음
+ \n세부사항: 오늘 다룬 상지 스피네이션 제한 환자용 보
+ 조도구와 THR 환자 3대 금기 자세에 대해 노트와 전공 서
+ 적을 참고하여 완벽히 정리할 것.\n노션 노트: https://app.n
+ otion.com/p/26-11-16-9-9-ADL-IADL-424c5c90104581178d16cacadeea8c26
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 9
+ 주차 강의 복습 및 보조도구 적용 사례 정리
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 9
+ 주차 강의 복습 및 보조도구 적용 사례 정리
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 임상 보조기(Splint)
+  적용 사례 조사 및 실습 준비
+DTSTART;TZID=Asia/Seoul:20261121T120000
+DTEND;TZID=Asia/Seoul:20261121T130000
+DTSTAMP:20261126T074317Z
+UID:ae8f9a7f825b_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 12
+ 주차 - 골관절염 환자를 위한 관절 보호 및 에너지 보존 
+ 원리\n분류: 기타 | 중요도: 보통\n세부사항: 손가락 및 
+ 무릎 관절염 환자에게 적용되는 대표적인 스플린트 종
+ 류와 생체역학적 원리를 조사하고 다음 실습 시간에 지
+ 참할 것.\n노션 노트: https://app.notion.com/p/26-11-16-12-12-424c5c
+ 9010458146bd18e335019ae8cf
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 임상 보조기(Splint) 적용 사례 조사 및 실습 준비
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 임상 보조기(Splint) 적용 사례 조사 및 실습 준비
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] OA 환자 대상 관절 
+ 보호 및 에너지 보존 교육 자료 작성 과제
+DTSTART;TZID=Asia/Seoul:20261123T170000
+DTEND;TZID=Asia/Seoul:20261123T180000
+DTSTAMP:20261126T074317Z
+UID:ae8f9a7f825b_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 12
+ 주차 - 골관절염 환자를 위한 관절 보호 및 에너지 보존 
+ 원리\n분류: 과제 | 중요도: 높음\n세부사항: 가상 환자 
+ 시나리오를 바탕으로 일상생활활동(ADL)에서 적용할 수 
+ 있는 관절 보호 원리와 보조기 활용 방안을 포함한 환자
+  교육 리플릿 제작 (A4 1~2페이지 분량).\n노션 노트: https:/
+ /app.notion.com/p/26-11-16-12-12-424c5c9010458146bd18e335019ae8cf
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] O
+ A 환자 대상 관절 보호 및 에너지 보존 교육 자료 작성 
+ 과제
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] OA
+  환자 대상 관절 보호 및 에너지 보존 교육 자료 작성 과
+ 제
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 12주차 골관절염 
+ 및 관절 보호 원리 복습
+DTSTART;TZID=Asia/Seoul:20261119T225900
+DTEND;TZID=Asia/Seoul:20261119T235900
+DTSTAMP:20261126T074317Z
+UID:ae8f9a7f825b_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 12
+ 주차 - 골관절염 환자를 위한 관절 보호 및 에너지 보존 
+ 원리\n분류: 복습/예습 | 중요도: 높음\n세부사항: 골관절
+ 염의 병태생리\, 관절 보호 5대 원칙\, 에너지 보존 기법
+ 의 핵심 내용을 전공 서적과 노트 필기를 참고하여 완벽
+ 히 정리할 것.\n노션 노트: https://app.notion.com/p/26-11-16-12-12
+ -424c5c9010458146bd18e335019ae8cf
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 1
+ 2주차 골관절염 및 관절 보호 원리 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 12
+ 주차 골관절염 및 관절 보호 원리 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] RA 손가락 변형 기
+ 전(척측 변위\, 백조목\, 단추구멍) 보조기 중재 조사
+DTSTART;TZID=Asia/Seoul:20261120T225900
+DTEND;TZID=Asia/Seoul:20261120T235900
+DTSTAMP:20261126T074317Z
+UID:30a0a0377fa6_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 11주차 - 류마티스
+  관절염(RA)과 골관절염(OA)의 비교 및 관절염 환자를 위
+ 한 작업치료 중재 전략\n분류: 복습/예습 | 중요도: 보통
+ \n세부사항: 손가락 대표 변형 3가지의 생체역학적 원리
+ 와 이에 적용되는 작업치료 보조기(Splint)의 종류 및 제
+ 작 원리 복습하기.\n노션 노트: https://app.notion.com/p/26-11-16
+ -11-11-RA-OA-424c5c901045815588e6dcf1e753065f
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] R
+ A 손가락 변형 기전(척측 변위\, 백조목\, 단추구멍) 보조
+ 기 중재 조사
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] RA
+  손가락 변형 기전(척측 변위\, 백조목\, 단추구멍) 보조
+ 기 중재 조사
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 관절 보호 원칙 및
+  에너지 보존 기법 사례 분석 과제
+DTSTART;TZID=Asia/Seoul:20261123T225900
+DTEND;TZID=Asia/Seoul:20261123T235900
+DTSTAMP:20261126T074317Z
+UID:30a0a0377fa6_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 11주차 - 류마티스
+  관절염(RA)과 골관절염(OA)의 비교 및 관절염 환자를 위
+ 한 작업치료 중재 전략\n분류: 과제 | 중요도: 보통\n세부
+ 사항: 류마티스 관절염 환자의 조조강직과 피로를 고려
+ 한 하루 일과표 재구성 및 보조도구 적용 방안 작성해 
+ 보기.\n노션 노트: https://app.notion.com/p/26-11-16-11-11-RA-OA-424c
+ 5c901045815588e6dcf1e753065f
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 관절 보호 원칙 및 에너지 보존 기법 사례 분석 과제
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 관절 보호 원칙 및 에너지 보존 기법 사례 분석 과제
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] RA vs OA 차이점 및 R
+ A 7가지 진단기준 요약 암기
+DTSTART;TZID=Asia/Seoul:20261119T225900
+DTEND;TZID=Asia/Seoul:20261119T235900
+DTSTAMP:20261126T074317Z
+UID:30a0a0377fa6_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 11주차 - 류마티스
+  관절염(RA)과 골관절염(OA)의 비교 및 관절염 환자를 위
+ 한 작업치료 중재 전략\n분류: 복습/예습 | 중요도: 높음
+ \n세부사항: 류마티스 관절염과 골관절염의 진료과(내과
+  vs 정형외과)\, 발병기전(자가면역 vs 퇴행성)\, 침범관절
+  양상 및 ACR 7가지 진단 기준(4가지 이상\, 6주 이상 지속)
+ 을 완벽히 암기할 것.\n노션 노트: https://app.notion.com/p/26-1
+ 1-16-11-11-RA-OA-424c5c901045815588e6dcf1e753065f
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] R
+ A vs OA 차이점 및 RA 7가지 진단기준 요약 암기
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] RA
+  vs OA 차이점 및 RA 7가지 진단기준 요약 암기
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] THA 후방 접근법 3
+ 대 금기 자세 및 ADL 수칙 복습
+DTSTART;TZID=Asia/Seoul:20261119T225900
+DTEND;TZID=Asia/Seoul:20261119T235900
+DTSTAMP:20261126T074317Z
+UID:6b1f2a95b45f_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 엉덩관절
+  전치환술(THA) 환자의 수술 후 재활 및 일상생활(ADL) 중
+ 재\n분류: 복습/예습 | 중요도: 높음\n세부사항: 엉덩관절
+  굴곡 90도 이상 금지\, 내전 금지\, 내회전 금지 원칙과 
+ 착탈의 수칙(입환벗건)을 전공서적을 참조하여 완벽히 
+ 암기할 것.\n노션 노트: https://app.notion.com/p/26-11-16-10-10-THA
+ -ADL-424c5c90104581e3a906e92e028cdfa0
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] T
+ HA 후방 접근법 3대 금기 자세 및 ADL 수칙 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] TH
+ A 후방 접근법 3대 금기 자세 및 ADL 수칙 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] THA 환자 ADL 실습 
+ 동영상 촬영 및 조별 평가 과제
+DTSTART;TZID=Asia/Seoul:20261123T225900
+DTEND;TZID=Asia/Seoul:20261123T235900
+DTSTAMP:20261126T074317Z
+UID:6b1f2a95b45f_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 엉덩관절
+  전치환술(THA) 환자의 수술 후 재활 및 일상생활(ADL) 중
+ 재\n분류: 과제 | 중요도: 높음\n세부사항: 조별로 THA 환
+ 자 ADL 시나리오(의자 앉기/일어서기\, 워커 보행\, 변기 
+ 이용\, 착탈의 보조도구 사용)를 설정하고 금기 자세 예
+ 방 가이드를 준수한 시뮬레이션 동영상을 촬영하여 제
+ 출할 것.\n노션 노트: https://app.notion.com/p/26-11-16-10-10-THA-AD
+ L-424c5c90104581e3a906e92e028cdfa0
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] T
+ HA 환자 ADL 실습 동영상 촬영 및 조별 평가 과제
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] TH
+ A 환자 ADL 실습 동영상 촬영 및 조별 평가 과제
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] ADL 보조도구(드레
+ 싱스틱\, 스타킹에이드\, 리처) 실습 및 사용법 복습
+DTSTART;TZID=Asia/Seoul:20261112T225900
+DTEND;TZID=Asia/Seoul:20261112T235900
+DTSTAMP:20261126T074317Z
+UID:c1d467298d74_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 - 
+ 에너지 보존 기법과 관절 보호 원칙 및 ADL 작업 단순화 
+ 중재 전략\n분류: 복습/예습 | 중요도: 보통\n세부사항: 
+ 학과 실습실에 구비된 착탈의 보조도구(스타킹 에이드\,
+  드레싱 스틱\, 단추 고리\, 탄력 신발끈 등)의 직접 체험
+  및 THA/편마비 환자 대상 교육 멘트 교안을 복습하세요.
+ \n노션 노트: https://app.notion.com/p/26-11-09-8-ADL-424c5c90104581fd9
+ af3f672f163ac67
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] A
+ DL 보조도구(드레싱스틱\, 스타킹에이드\, 리처) 실습 및 
+ 사용법 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] AD
+ L 보조도구(드레싱스틱\, 스타킹에이드\, 리처) 실습 및 
+ 사용법 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 관절 보호 및 에너
+ 지 보존 기법 실제 적용 사례 보고서 작성
+DTSTART;TZID=Asia/Seoul:20261116T225900
+DTEND;TZID=Asia/Seoul:20261116T235900
+DTSTAMP:20261126T074317Z
+UID:c1d467298d74_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 일상생활활동 - 
+ 에너지 보존 기법과 관절 보호 원칙 및 ADL 작업 단순화 
+ 중재 전략\n분류: 과제 | 중요도: 높음\n세부사항: 강의에
+ 서 배운 에너지 보존 및 관절 보호 8대 원칙을 바탕으로
+ \, 실제 임상 환자(류마티스 관절염\, MS\, COPD 등 중 택1)
+ 의 착탈의\, 목욕\, 가사활동 중 2가지 사례를 선정하여 
+ 보조도구 활용 및 환경 개조 중재 계획서를 2페이지 분
+ 량으로 작성해 사이버캠퍼스에 제출하세요.\n노션 노트:
+  https://app.notion.com/p/26-11-09-8-ADL-424c5c90104581fd9af3f672f163ac67
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 관절 보호 및 에너지 보존 기법 실제 적용 사례 보고서 
+ 작성
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 관절 보호 및 에너지 보존 기법 실제 적용 사례 보고서 
+ 작성
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 중간/기말고사 대
+ 비 실습 및 임상사례 케이스 스터디 준비
+DTSTART;TZID=Asia/Seoul:20261116T080000
+DTEND;TZID=Asia/Seoul:20261116T090000
+DTSTAMP:20261126T074317Z
+UID:e2f775e5feb1_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 관절가동범위 제
+ 한 및 협동장애 환자를 위한 일상생활활동(ADL) 적응 전
+ 략 및 보조도구 활용\n분류: 시험 | 중요도: 보통\n세부사
+ 항: 어깨 아탈구 환자 ROM 운동 시 핸들링 위치 및 보상작
+ 용 고정법 실습 절차 리마인드하기.\n노션 노트: https://ap
+ p.notion.com/p/26-11-09-7-ADL-424c5c90104581088f31c9c40c30ab55
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 중간/기말고사 대비 실습 및 임상사례 케이스 스터디 준
+ 비
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 중간/기말고사 대비 실습 및 임상사례 케이스 스터디 준
+ 비
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] ADL 3대 원칙(작업
+ 단순화\, 에너지보존\, 관절보호) 구별 문항 풀이 연습
+DTSTART;TZID=Asia/Seoul:20261113T225900
+DTEND;TZID=Asia/Seoul:20261113T235900
+DTSTAMP:20261126T074317Z
+UID:e2f775e5feb1_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 관절가동범위 제
+ 한 및 협동장애 환자를 위한 일상생활활동(ADL) 적응 전
+ 략 및 보조도구 활용\n분류: 복습/예습 | 중요도: 높음\n
+ 세부사항: 교수님이 강조하신 작업 단순화/에너지 보존 
+ 한 묶음과 관절 보호 원칙 간의 문제 구별 포인트(류마
+ 티스 관절염 적용 사례 등) 복습하기.\n노션 노트: https://
+ app.notion.com/p/26-11-09-7-ADL-424c5c90104581088f31c9c40c30ab55
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] A
+ DL 3대 원칙(작업단순화\, 에너지보존\, 관절보호) 구별 
+ 문항 풀이 연습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] AD
+ L 3대 원칙(작업단순화\, 에너지보존\, 관절보호) 구별 문
+ 항 풀이 연습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 착탈의 보조도구(
+ 리처\, 드레싱스틱\, 버튼후크) 구조 및 기능 비교 정리
+DTSTART;TZID=Asia/Seoul:20261112T225900
+DTEND;TZID=Asia/Seoul:20261112T235900
+DTSTAMP:20261126T074317Z
+UID:e2f775e5feb1_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 관절가동범위 제
+ 한 및 협동장애 환자를 위한 일상생활활동(ADL) 적응 전
+ 략 및 보조도구 활용\n분류: 복습/예습 | 중요도: 높음\n
+ 세부사항: 강의에서 강조된 리처와 드레싱 스틱의 구조
+ 적 차이점(집게 vs 갈고리)과 버튼후크의 원리를 사진 자
+ 료와 함께 개인 노트에 비교 작성하여 국시 유형 대비할
+  것.\n노션 노트: https://app.notion.com/p/26-11-09-7-ADL-424c5c901045
+ 81088f31c9c40c30ab55
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 착탈의 보조도구(리처\, 드레싱스틱\, 버튼후크) 구조 및
+  기능 비교 정리
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 착탈의 보조도구(리처\, 드레싱스틱\, 버튼후크) 구조 및
+  기능 비교 정리
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 리빙랩 실습 현장 
+ 촬영 및 시나리오 1차 작성
+DTSTART;TZID=Asia/Seoul:20261120T225900
+DTEND;TZID=Asia/Seoul:20261120T235900
+DTSTAMP:20261126T074317Z
+UID:bebefebd5f51_task_3@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
+ 편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
+ 시나리오 작성\n분류: 과제 | 중요도: 보통\n세부사항: 현
+ 장 방문 시 이동 동선 스틸컷/영상 촬영 후 평가표 및 시
+ 나리오 1차 안 작성 및 교수님 피드백 준비.\n노션 노트: 
+ https://app.notion.com/p/26-11-09-6-10-424c5c901045816b9b3cc3c0f9f86028
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 리빙랩 실습 현장 촬영 및 시나리오 1차 작성
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 리빙랩 실습 현장 촬영 및 시나리오 1차 작성
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 장애인 편의시설 
+ 치수 기준 및 주거개조 법적 규격 복습
+DTSTART;TZID=Asia/Seoul:20261116T225900
+DTEND;TZID=Asia/Seoul:20261116T235900
+DTSTAMP:20261126T074317Z
+UID:bebefebd5f51_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
+ 편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
+ 시나리오 작성\n분류: 복습/예습 | 중요도: 높음\n세부사
+ 항: 경사도 1/18\, 장애인 주차구역 3.3m x 5m\, 출입문 0.9m\, 
+ 회전 공간 1.5m\, 거울 15도 경사 등 기말고사 및 국시 빈
+ 출 수치 암기.\n노션 노트: https://app.notion.com/p/26-11-09-6-10-
+ 424c5c901045816b9b3cc3c0f9f86028
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 장애인 편의시설 치수 기준 및 주거개조 법적 규격 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 장애인 편의시설 치수 기준 및 주거개조 법적 규격 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 리빙랩 지원비(1인
+ 당 1만원) 카드 수령 및 사용 지침 숙지
+DTSTART;TZID=Asia/Seoul:20261113T160000
+DTEND;TZID=Asia/Seoul:20261113T170000
+DTSTAMP:20261126T074317Z
+UID:bebefebd5f51_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
+ 편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
+ 시나리오 작성\n분류: 기타 | 중요도: 보통\n세부사항: 목
+ 요일/금요일 중 카드 수령 후 식대 및 회의비 집행. 영수
+ 증 캡처 및 회의록 서식 제출 필수.\n노션 노트: https://app
+ .notion.com/p/26-11-09-6-10-424c5c901045816b9b3cc3c0f9f86028
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 리빙랩 지원비(1인당 1만원) 카드 수령 및 사용 지침 숙
+ 지
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 리빙랩 지원비(1인당 1만원) 카드 수령 및 사용 지침 숙
+ 지
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 리빙랩 조별 역할 
+ 분담 및 대상 시설 선정 완료
+DTSTART;TZID=Asia/Seoul:20261112T225900
+DTEND;TZID=Asia/Seoul:20261112T235900
+DTSTAMP:20261126T074317Z
+UID:bebefebd5f51_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 장애인 
+ 편의시설 기준과 무장애 주거환경 개선 및 리빙랩 실습 
+ 시나리오 작성\n분류: 과제 | 중요도: 높음\n세부사항: 조
+ 원 간 조장\, 촬영기사\, 주인공(장애인 시나리오 역할)\,
+  보조자 역할 분담 확정 및 영도구 내 평가 대상 공공시
+ 설/상가 선정.\n노션 노트: https://app.notion.com/p/26-11-09-6-10-
+ 424c5c901045816b9b3cc3c0f9f86028
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 리빙랩 조별 역할 분담 및 대상 시설 선정 완료
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 리빙랩 조별 역할 분담 및 대상 시설 선정 완료
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 질환별(RA\, DMD\, 치
+ 매\, 편마비) 주택개조 핵심 금기 및 권장사항 표 작성
+DTSTART;TZID=Asia/Seoul:20261109T225900
+DTEND;TZID=Asia/Seoul:20261109T235900
+DTSTAMP:20261126T074317Z
+UID:eeb336d055c3_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 공간별 
+ 주택개조 가이드라인 및 질환별 환경수정·치료사 상담 
+ 전문성\n분류: 과제 | 중요도: 보통\n세부사항: 강의 후반
+ 부에서 다룬 뇌졸중\, 척수손상\, 류마티스 관절염\, 근
+ 이영양증\, 발달장애\, 치매의 특성에 따른 주택개조 체
+ 크리스트를 A4 1~2장 분량의 표 형태로 작성하여 포트폴
+ 리오에 추가할 것.\n노션 노트: https://app.notion.com/p/26-11-02
+ -5-10-424c5c90104581068f20fa924978f9cd
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 질환별(RA\, DMD\, 치매\, 편마비) 주택개조 핵심 금기 및 
+ 권장사항 표 작성
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 질환별(RA\, DMD\, 치매\, 편마비) 주택개조 핵심 금기 및 
+ 권장사항 표 작성
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 척수손상(SCI) C6 vs 
+ C7 기능 분기점 및 이양 프로토콜 정리
+DTSTART;TZID=Asia/Seoul:20261106T225900
+DTEND;TZID=Asia/Seoul:20261106T235900
+DTSTAMP:20261126T074317Z
+UID:eeb336d055c3_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 공간별 
+ 주택개조 가이드라인 및 질환별 환경수정·치료사 상담 
+ 전문성\n분류: 복습/예습 | 중요도: 높음\n세부사항: C6의 
+ 건반사(Tenodesis action) 작용과 C7 삼두근(Triceps)의 기능적 
+ 차이\, 그리고 이것이 수동 휠체어 구동 및 독립적 이양
+ \, 주택개조에 미치는 영향을 서술형으로 정리할 것.\n노
+ 션 노트: https://app.notion.com/p/26-11-02-5-10-424c5c90104581068f20fa9
+ 24978f9cd
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 척수손상(SCI) C6 vs C7 기능 분기점 및 이양 프로토콜 정리
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 척수손상(SCI) C6 vs C7 기능 분기점 및 이양 프로토콜 정리
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 욕실 세면대 및 화
+ 장실 세부 개조 치수 복습
+DTSTART;TZID=Asia/Seoul:20261105T225900
+DTEND;TZID=Asia/Seoul:20261105T235900
+DTSTAMP:20261126T074317Z
+UID:eeb336d055c3_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 공간별 
+ 주택개조 가이드라인 및 질환별 환경수정·치료사 상담 
+ 전문성\n분류: 복습/예습 | 중요도: 높음\n세부사항: 세면
+ 대 거울 경사 각도(15도)\, 휠체어 회전 반경(150x150cm)\, 출
+ 입문 유효 폭(75~90cm) 등 강의 중 언급된 핵심 치수를 교
+ 재와 대조하여 요약 정리할 것.\n노션 노트: https://app.noti
+ on.com/p/26-11-02-5-10-424c5c90104581068f20fa924978f9cd
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 욕실 세면대 및 화장실 세부 개조 치수 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 욕실 세면대 및 화장실 세부 개조 치수 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [지역사회재활/ADL 연계] 지역사회 
+ 주거복지시설 및 실버타운 비즈니스 모델 조사
+DTSTART;TZID=Asia/Seoul:20261109T225900
+DTEND;TZID=Asia/Seoul:20261109T235900
+DTSTAMP:20261126T074317Z
+UID:e74453f81664_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조의 원칙
+ 과 공간별 세부 환경 수정 가이드라인 (4)\n분류: 과제 | 
+ 중요도: 보통\n세부사항: 수업 중 언급된 실버타운(더 클
+ 래식 500\, 오시리아 라티브 등) 및 노인복지주택(남미동 
+ 모델\, 흰돌센터 등)의 홈페이지를 방문하여 작업치료사
+ 의 개입 가능 영역과 특화 ADL 프로그램을 분석해보세요.
+ \n노션 노트: https://app.notion.com/p/26-11-02-4-4-424c5c901045817c8a9
+ afdf9137838a1
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [지역사회재활/AD
+ L 연계] 지역사회 주거복지시설 및 실버타운 비즈니스 
+ 모델 조사
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [지역사회재활/ADL
+  연계] 지역사회 주거복지시설 및 실버타운 비즈니스 모
+ 델 조사
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 주택 개조 공간별 
+ 핵심 치수 및 가이드라인 총정리 복습
+DTSTART;TZID=Asia/Seoul:20261105T225900
+DTEND;TZID=Asia/Seoul:20261105T235900
+DTSTAMP:20261126T074317Z
+UID:e74453f81664_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조의 원칙
+ 과 공간별 세부 환경 수정 가이드라인 (4)\n분류: 복습/예
+ 습 | 중요도: 높음\n세부사항: 강의에서 다룬 필수 수치(
+ 경사로 1/12 및 1/8\, 문턱 1.5cm\, 유효 문폭 75~90cm\, 회전공
+ 간 150×150cm\, 조작기/수납 높이 40~120cm\, 손잡이 직경 3.2~4
+ cm 및 벽 이격거리 4~5cm)를 완벽히 암기하고 노트에 도면
+ 과 함께 정리하세요.\n노션 노트: https://app.notion.com/p/26-11
+ -02-4-4-424c5c901045817c8a9afdf9137838a1
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 주택 개조 공간별 핵심 치수 및 가이드라인 총정리 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 주택 개조 공간별 핵심 치수 및 가이드라인 총정리 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 주택 개조 평가 보
+ 고서 작성 실습 과제
+DTSTART;TZID=Asia/Seoul:20261109T225900
+DTEND;TZID=Asia/Seoul:20261109T235900
+DTSTAMP:20261126T074317Z
+UID:6030432cf61a_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조 평가 
+ 및 유니버설 디자인(Universal Design)의 임상적 적용\n분류: 
+ 과제 | 중요도: 높음\n세부사항: 제시된 클라이언트 케이
+ 스를 바탕으로 주거 공간(주방/욕실)의 물리적 장벽을 
+ 평가하고\, 공공기관 제출용 주택 개조 보고서 양식에 
+ 맞추어 개조 목표 및 구체적 환경 중재안을 작성하여 제
+ 출할 것.\n노션 노트: https://app.notion.com/p/26-11-02-3-Universal-
+ Design-424c5c901045812695bec36bdb685eec
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 주택 개조 평가 보고서 작성 실습 과제
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 주택 개조 평가 보고서 작성 실습 과제
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 유니버설 디자인 7
+ 대 원칙 및 임상 적용 예시 복습
+DTSTART;TZID=Asia/Seoul:20261105T225900
+DTEND;TZID=Asia/Seoul:20261105T235900
+DTSTAMP:20261126T074317Z
+UID:6030432cf61a_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 주택 개조 평가 
+ 및 유니버설 디자인(Universal Design)의 임상적 적용\n분류: 
+ 복습/예습 | 중요도: 높음\n세부사항: 유니버설 디자인의
+  7가지 원칙 명칭과 각각에 해당하는 주거 환경 적용 사
+ 례(예: 레버형 손잡이\, 센서식 전등\, 회전 공간 확보 등
+ )를 노트에 정리하고 국가고시 예상 문제 형태로 복습할
+  것.\n노션 노트: https://app.notion.com/p/26-11-02-3-Universal-Design
+ -424c5c901045812695bec36bdb685eec
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 유니버설 디자인 7대 원칙 및 임상 적용 예시 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 유니버설 디자인 7대 원칙 및 임상 적용 예시 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 실습실에서 피벗 
+ 트랜스퍼 및 무릎 블로킹 상호 실습
+DTSTART;TZID=Asia/Seoul:20261031T170000
+DTEND;TZID=Asia/Seoul:20261031T180000
+DTSTAMP:20261126T074317Z
+UID:c4d4b9e56370_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 상하지 
+ 의복 입고 벗기 작업치료 중재 전략 및 이동(Transfer) 훈
+ 련\n분류: 기타 | 중요도: 보통\n세부사항: 작업치료 실습
+ 실에서 동기들과 조를 이루어 침대-휠체어 간 피벗 트랜
+ 스퍼 시 치료사의 무릎 블로킹과 체중 이동 핸들링 기법
+  직접 연습.\n노션 노트: https://app.notion.com/p/26-10-26-2-10-Tra
+ nsfer-424c5c90104581bb9dd9e5dbce1f6b4e
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 실습실에서 피벗 트랜스퍼 및 무릎 블로킹 상호 실습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 실습실에서 피벗 트랜스퍼 및 무릎 블로킹 상호 실습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 10주차 강의 녹음 
+ 및 심화 아티클 복습
+DTSTART;TZID=Asia/Seoul:20261028T190000
+DTEND;TZID=Asia/Seoul:20261028T200000
+DTSTAMP:20261126T074317Z
+UID:c4d4b9e56370_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 상하지 
+ 의복 입고 벗기 작업치료 중재 전략 및 이동(Transfer) 훈
+ 련\n분류: 복습/예습 | 중요도: 높음\n세부사항: 제공된 
+ 심화 아티클 5편을 정독하고\, 편마비 환자 이동 및 의복
+  착용 시 국시 출제 포인트와 임상 주의사항 완벽 암기.
+ \n노션 노트: https://app.notion.com/p/26-10-26-2-10-Transfer-424c5c901
+ 04581bb9dd9e5dbce1f6b4e
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 1
+ 0주차 강의 녹음 및 심화 아티클 복습
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 10
+ 주차 강의 녹음 및 심화 아티클 복습
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 편마비 환자 의복 
+ 착용 훈련 프로토콜 리포트 작성
+DTSTART;TZID=Asia/Seoul:20261029T225900
+DTEND;TZID=Asia/Seoul:20261029T235900
+DTSTAMP:20261126T074317Z
+UID:c4d4b9e56370_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 10주차 - 상하지 
+ 의복 입고 벗기 작업치료 중재 전략 및 이동(Transfer) 훈
+ 련\n분류: 과제 | 중요도: 높음\n세부사항: 오늘 강의에서
+  다룬 상하지 의복 착용(On/Off 원칙)과 피벗 트랜스퍼의 
+ 생체역학적 원리를 포함하여 A4 1페이지 분량의 임상 중
+ 재 보고서 작성 및 제출.\n노션 노트: https://app.notion.com/p/
+ 26-10-26-2-10-Transfer-424c5c90104581bb9dd9e5dbce1f6b4e
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 편마비 환자 의복 착용 훈련 프로토콜 리포트 작성
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 편마비 환자 의복 착용 훈련 프로토콜 리포트 작성
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [지역사회재활/ADL] 지역사회 공공
+ 기관 편의시설 및 주택 개조 현장 평가 준비
+DTSTART;TZID=Asia/Seoul:20261109T225900
+DTEND;TZID=Asia/Seoul:20261109T235900
+DTSTAMP:20261126T074317Z
+UID:d09f2e5222d7_task_3@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
+ 상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
+  보고서 활용\n분류: 복습/예습 | 중요도: 보통\n세부사항
+ : 12월 초 교수님 국외 출장 주간의 현장 평가 대체 출석
+ 을 대비하여 강의 포털에 업로드된 주택 환경 평가\, 개
+ 조 지침 및 편의시설 설치 법적 기준 자료 사전 학습.\n
+ 노션 노트: https://app.notion.com/p/26-10-26-1-AI-424c5c901045812aac67
+ d9e00d334695
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [지역사회재활/AD
+ L] 지역사회 공공기관 편의시설 및 주택 개조 현장 평가 
+ 준비
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [지역사회재활/ADL
+ ] 지역사회 공공기관 편의시설 및 주택 개조 현장 평가 
+ 준비
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] SCI/CVA 사례 기반 AD
+ L 중재 계획서 조별 수립
+DTSTART;TZID=Asia/Seoul:20261102T225900
+DTEND;TZID=Asia/Seoul:20261102T235900
+DTSTAMP:20261126T074317Z
+UID:d09f2e5222d7_task_2@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
+ 상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
+  보고서 활용\n분류: 과제 | 중요도: 보통\n세부사항: 지
+ 난 시간 학습한 SCI 및 CVA 사례를 바탕으로 환자의 주요 
+ 호소(Chief Complaint)와 삼킴/식사/개인위생 장애를 분석하
+ 고\, AI 도구(ChatGPT\, Gemini)를 활용하여 일상생활 중재 계
+ 획서 초안 작성(초안 작성 시 Claude 사용 금지).\n노션 노
+ 트: https://app.notion.com/p/26-10-26-1-AI-424c5c901045812aac67d9e00d3346
+ 95
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] S
+ CI/CVA 사례 기반 ADL 중재 계획서 조별 수립
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] SC
+ I/CVA 사례 기반 ADL 중재 계획서 조별 수립
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동/지사재] M-CAR 사업 
+ 연계 조장 워크숍 참석
+DTSTART;TZID=Asia/Seoul:20261030T170000
+DTEND;TZID=Asia/Seoul:20261030T180000
+DTSTAMP:20261126T074317Z
+UID:d09f2e5222d7_task_1@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
+ 상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
+  보고서 활용\n분류: 기타 | 중요도: 높음\n세부사항: 간
+ 호학과\, 바이오융합학과와 연계된 M-CAR 사업 관련 조장 
+ 10명 필참 워크숍 참석(조장 불참 시 다른 조원 대리 참
+ 석 필수\, 불참 시 페널티 부여 주의).\n노션 노트: https://
+ app.notion.com/p/26-10-26-1-AI-424c5c901045812aac67d9e00d334695
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동/
+ 지사재] M-CAR 사업 연계 조장 워크숍 참석
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동/지
+ 사재] M-CAR 사업 연계 조장 워크숍 참석
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:[일상생활활동] [일상생활활동] 중간고사 성적 확
+ 인 및 개별 오답 분석
+DTSTART;TZID=Asia/Seoul:20261029T160000
+DTEND;TZID=Asia/Seoul:20261029T170000
+DTSTAMP:20261126T074317Z
+UID:d09f2e5222d7_task_0@lecturerecord.ai
+DESCRIPTION:강좌: 일상생활활동\n강의명: 뇌졸중 환자의 일
+ 상생활활동(식사하기·개인위생) 중재 및 임상 태도와 AI
+  보고서 활용\n분류: 시험 | 중요도: 높음\n세부사항: 목
+ 요일 지역사회재활 수업 시간에 공개되는 일상생활활동
+  및 지역사회재활 중간고사 성적을 확인하고\, 특히 Key M
+ uscle 주관식 문항(C-level\, L-level 및 Ankle Dorsiflexor) 감점 요
+ 인을 철저히 복기하여 오답 노트 작성.\n노션 노트: https:
+ //app.notion.com/p/26-10-26-1-AI-424c5c901045812aac67d9e00d334695
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⏰ 내일 마감: [일상생활활동] [일상생활활동] 
+ 중간고사 성적 확인 및 개별 오답 분석
+TRIGGER:-P1D
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🚨 2시간 전: [일상생활활동] [일상생활활동] 
+ 중간고사 성적 확인 및 개별 오답 분석
+TRIGGER:-PT2H
+END:VALARM
+END:VEVENT
 END:VCALENDAR
