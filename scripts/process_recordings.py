@@ -703,38 +703,13 @@ def sync_to_notion(analysis: Dict[str, Any]) -> Optional[str]:
                 }
             )
 
-    # Format title concisely for mobile screens: "MM/DD N주차 제목" (e.g., "10/26 1주차 뇌졸중 환자의 ADL")
-    try:
-        dt_mmdd = datetime.strptime(rec_date_str, "%Y-%m-%d").strftime("%m/%d")
-    except ValueError:
-        dt_mmdd = rec_date_str[-5:].replace("-", "/")
-
-    raw_file_stem = Path(analysis.get("source_file", "")).stem
-    raw_file_stem = re.sub(r"^20\d{2}[-_.]?\d{2}[-_.]?\d{2}[-_\s]*", "", raw_file_stem).strip()
-    num_m = re.search(r"(\d+)", raw_file_stem)
-    file_num = num_m.group(1) if num_m else ""
-
-    clean_title = analysis["lecture_title"].strip()
-    # Strip leading [과목명] or date if Gemini included it
-    clean_title = re.sub(r"^\[[^\]]+\]\s*", "", clean_title)
-    clean_title = re.sub(r"^\d{2,4}년\s*\d{1,2}월\s*\d{1,2}일\s*", "", clean_title)
-
-    # Extract or normalize "N주차" at the start of clean_title
-    week_m = re.match(r"^(\d+)\s*(?:주차|강)\s*[-—:]?\s*(.*)$", clean_title)
-    if week_m:
-        week_tag = f"{week_m.group(1)}주차"
-        subject_body = week_m.group(2).strip()
-    elif file_num:
-        week_tag = f"{file_num}주차"
-        subject_body = clean_title
-    else:
-        week_tag = ""
-        subject_body = clean_title
-
-    if week_tag:
-        page_title = f"{dt_mmdd} {week_tag} {subject_body}".strip()
-    else:
-        page_title = f"{dt_mmdd} {subject_body}".strip()
+    # Format title concisely for mobile screens: "MM/DD N주차 제목" (e.g., "10/28 1주차 지역사회중심재활(CBR) 운영 예시")
+    page_title = build_clean_lecture_page_title(
+        rec_date_str=rec_date_str,
+        course_name=analysis["course_name"],
+        source_file=analysis.get("source_file", ""),
+        raw_lecture_title=analysis["lecture_title"],
+    )
 
     created_url = None
     created_page_id = None
@@ -1345,11 +1320,96 @@ def main() -> None:
     print("[SUCCESS] Batch processing finished!")
 
 
+def extract_lecture_number_from_stem(raw_file_stem: str) -> str:
+    """
+    Extracts the 1~2 digit lecture number from filenames like 'ADL 10', '지역사회 5', '삼킴재활 8',
+    while ignoring 6-digit YYMMDD timestamps like '음성 261124_180737'.
+    """
+    stem = re.sub(r"^20\d{2}[-_.]?\d{2}[-_.]?\d{2}[-_\s]*", "", raw_file_stem).strip()
+    if re.match(r"^(?:음성|녹음|Voice|Record)\s*\d{6}", stem, re.IGNORECASE):
+        return ""
+    m = re.search(r"(?<!\d)(\d{1,2})(?!\d)", stem)
+    if m:
+        val = int(m.group(1))
+        if 1 <= val <= 30:
+            return str(val)
+    return ""
+
+
+def strip_redundant_course_and_week_prefix(title: str, course_name: str = "") -> str:
+    """
+    Removes leading [과목명], 과목명 (when followed by whitespace, separator, or N주차), 'N주차 -', '강의:', etc.
+    so '10/28 1주차 지역사회재활 1주차 - 지역사회중심재활' becomes '지역사회중심재활' without eating '지역사회' from '지역사회중심재활'.
+    """
+    t = title.strip()
+    for _ in range(3):
+        prev = t
+        t = re.sub(r"^\[[^\]]+\]\s*", "", t).strip()
+        t = re.sub(r"^\d{2,4}년\s*\d{1,2}월\s*\d{1,2}일\s*", "", t).strip()
+        # Strip any official course name or common abbreviation ONLY when followed by separator/whitespace + week or dash
+        candidates = list(OFFICIAL_COURSES) + list(COURSE_ALIASES.keys())
+        if course_name:
+            candidates.append(course_name)
+        for c in sorted(set(candidates), key=len, reverse=True):
+            # Case A: "지역사회재활 1주차 - ..." or "지역사회재활 - ..." or "[지역사회재활] ..."
+            pattern = (
+                r"^(?:\[\s*)?"
+                + re.escape(c)
+                + r"(?:\s*\])?(?:\s*\([A-Za-z]+\))?(?:\s+\d{1,6}\s*(?:주차|강|차시))?\s*[-—:·]\s*"
+            )
+            t_new = re.sub(pattern, "", t, flags=re.IGNORECASE).strip()
+            if t_new and len(t_new) < len(t):
+                t = t_new
+                continue
+            # Case B: "지역사회재활 1주차 ..." (followed by N주차)
+            pattern_wk = (
+                r"^(?:\[\s*)?"
+                + re.escape(c)
+                + r"(?:\s*\])?(?:\s*\([A-Za-z]+\))?\s+(?=\d{1,6}\s*(?:주차|강|차시))"
+            )
+            t_new2 = re.sub(pattern_wk, "", t, flags=re.IGNORECASE).strip()
+            if t_new2 and len(t_new2) < len(t):
+                t = t_new2
+        # Strip leading "N주차", "N강", "N차시", "강의"
+        t = re.sub(r"^\d{1,6}\s*(?:주차|강|차시)\s*(?:강의)?\s*[-—:·]?\s*", "", t).strip()
+        t = re.sub(r"^강의\s*[-—:·]\s*", "", t).strip()
+        if t == prev:
+            break
+    return t or title.strip()
+
+
+def build_clean_lecture_page_title(
+    rec_date_str: str,
+    course_name: str,
+    source_file: str,
+    raw_lecture_title: str,
+) -> str:
+    try:
+        dt_mmdd = datetime.strptime(rec_date_str, "%Y-%m-%d").strftime("%m/%d")
+    except ValueError:
+        dt_mmdd = rec_date_str[-5:].replace("-", "/")
+
+    file_num = extract_lecture_number_from_stem(Path(source_file).stem) if source_file else ""
+    clean_t = raw_lecture_title.strip()
+
+    # Check if raw_lecture_title had an explicit 1~2 digit week number
+    m_wk = re.search(r"(?<!\d)(\d{1,2})\s*(?:주차|강|차시)", clean_t)
+    ai_week = m_wk.group(1) if (m_wk and 1 <= int(m_wk.group(1)) <= 30) else ""
+
+    # Prefer the explicit filename number (e.g. '지역사회 5.m4a' -> 5주차) over AI's guess
+    week_num = file_num or ai_week
+    subject_body = strip_redundant_course_and_week_prefix(clean_t, course_name)
+
+    if week_num:
+        return f"{dt_mmdd} {week_num}주차 {subject_body}".strip()
+    return f"{dt_mmdd} {subject_body}".strip()
+
+
 def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectures: List[Dict[str, Any]]) -> None:
     """
     Creates a separate, standalone Notion note specifically for that day's in-depth Concept Study Articles:
-    e.g. `📚 26년 11월 16일 핵심 심화 아티클 (강의10, 11, 12 종합)`
-    alongside the individual lecture notes (`📝 26년 11월 16일 강의10 — ...`).
+    e.g. `11/16 핵심 아티클 (10, 11, 12주차)`
+    alongside the individual lecture notes (`11/16 10주차 ...`).
     """
     token = os.environ.get("NOTION_TOKEN", "").strip()
     if not token:
@@ -1372,9 +1432,11 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
         dt_obj = datetime.strptime(recorded_date, "%Y-%m-%d")
         date_with_day = f"{recorded_date} ({weekday_names[dt_obj.weekday()]}요일)"
         dt_short = dt_obj.strftime("%y년 %m월 %d일")
+        dt_mmdd = dt_obj.strftime("%m/%d")
     except ValueError:
         date_with_day = recorded_date
         dt_short = recorded_date
+        dt_mmdd = recorded_date[-5:].replace("-", "/")
 
     # Locate course folder page
     course_folder_page_id = parent_page_id
@@ -1395,14 +1457,21 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
         pass
 
     ordered_lectures = list(reversed(lectures))
-    lec_nums = []
-    for idx, lec in enumerate(ordered_lectures, 1):
-        stem = Path(lec.get("source_file", "")).stem
-        stem = re.sub(r"^20\d{2}[-_.]?\d{2}[-_.]?\d{2}[-_\s]*", "", stem).strip()
-        m_num = re.search(r"(\d+)", stem)
-        lec_nums.append(m_num.group(1) if m_num else str(idx))
+    lec_nums: List[str] = []
+    for lec in ordered_lectures:
+        num = extract_lecture_number_from_stem(Path(lec.get("source_file", "")).stem)
+        if num and num not in lec_nums:
+            lec_nums.append(num)
+    lec_nums.sort(key=lambda x: int(x))
     lec_nums_str = ", ".join(lec_nums)
-    titles_joined = " / ".join(lec["lecture_title"] for lec in ordered_lectures)
+    titles_joined = " / ".join(
+        strip_redundant_course_and_week_prefix(lec["lecture_title"], course_name) for lec in ordered_lectures
+    )
+
+    if lec_nums_str:
+        page_title = f"{dt_mmdd} 핵심 아티클 ({lec_nums_str}주차)"
+    else:
+        page_title = f"{dt_mmdd} 핵심 아티클"
 
     children: List[Dict[str, Any]] = [
         {
@@ -1415,7 +1484,7 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
                         "type": "text",
                         "text": {
                             "content": (
-                                f"📅 강의 일자: {date_with_day} ({dt_short} 강의 {lec_nums_str} 핵심 개념 총정리 아티클)\n"
+                                f"📅 강의 일자: {date_with_day} ({page_title})\n"
                                 f"🎓 강좌명: {course_name}\n"
                                 f"📖 취합된 강의 범위: {titles_joined[:1400]}\n\n"
                                 f"이 노트는 오늘 진행된 모든 강의에서 반드시 공부하고 이해해야 할 핵심 전공 개념들을 "
@@ -1429,7 +1498,8 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
     ]
 
     art_count = 0
-    for idx, lec in enumerate(ordered_lectures, 1):
+    for lec in ordered_lectures:
+        clean_lec_t = strip_redundant_course_and_week_prefix(lec["lecture_title"], course_name)
         children.append({"object": "block", "type": "divider", "divider": {}})
         children.append(
             {
@@ -1439,7 +1509,7 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
                     "rich_text": [
                         {
                             "type": "text",
-                            "text": {"content": f"📘 [{lec['lecture_title']}] 핵심 개념 심화 아티클"[:1900]},
+                            "text": {"content": f"📘 [{clean_lec_t}] 핵심 개념 심화 아티클"[:1900]},
                         }
                     ]
                 },
@@ -1478,12 +1548,6 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
             )
             append_paragraph_chunks(children, art.get("article_body", ""))
 
-    try:
-        dt_mmdd = datetime.strptime(recorded_date, "%Y-%m-%d").strftime("%m/%d")
-    except ValueError:
-        dt_mmdd = recorded_date[-5:].replace("-", "/")
-
-    page_title = f"{dt_mmdd} 핵심 아티클 ({lec_nums_str}주차)"
     payload = {
         "parent": {"page_id": course_folder_page_id},
         "icon": {"type": "emoji", "emoji": "📚"},
@@ -1507,48 +1571,75 @@ def sync_daily_consolidated_article(course_name: str, recorded_date: str, lectur
                 )
 
 
-def format_concise_notion_title(old_title: str) -> Optional[str]:
+def format_concise_notion_title(old_title: str, course_name: str = "") -> Optional[str]:
     """
-    Converts verbose legacy titles like:
-    - `📝 26년 10월 26일 강의1 — 뇌졸중 환자의 일상생활활동` -> `10/26 1주차 뇌졸중 환자의 일상생활활동`
-    - `📝 26년 10월 26일 강의2 — 10주차 - 상하지 ...` -> `10/26 2주차 상하지 ...`
-    - `[일상생활활동] 11강 - 류마티스 관절염(RA)과 ...` -> `11/16 11주차 류마티스 관절염(RA)과 ...`
-    - `📚 26년 11월 16일 핵심 심화 아티클 (강의 10, 11, 12 통합)` -> `11/16 핵심 아티클 (10, 11, 12주차)`
+    Normalizes any Notion page title (including existing pages with '261124주차' or repeated course names):
+    - `10/28 1주차 지역사회재활 1주차 - 지역사회중심...` -> `10/28 1주차 지역사회중심...`
+    - `11/24 261124주차 지역사회중심재활(CBR)과...` -> `11/24 지역사회중심재활(CBR)과...`
+    - `11/24 핵심 아티클 (261124, 261124주차)` -> `11/24 핵심 아티클`
+    - `11/26 핵심 아티클 (10, 9주차)` -> `11/26 핵심 아티클 (9, 10주차)`
     """
     t = old_title.strip()
 
-    # Case 1: Daily Core Article
+    # Case 1: Already starts with MM/DD and is a Core Article
+    m_art_short = re.match(r"^[📚📰\s]*(\d{1,2})/(\d{1,2})\s*핵심\s*아티클(?:\s*\(([^)]*)\))?$", t)
+    if m_art_short:
+        mm, dd = int(m_art_short.group(1)), int(m_art_short.group(2))
+        raw_nums = m_art_short.group(3) or ""
+        valid_nums = []
+        for n_str in re.findall(r"\d+", raw_nums):
+            val = int(n_str)
+            if 1 <= val <= 30 and val not in valid_nums:
+                valid_nums.append(val)
+        valid_nums.sort()
+        if valid_nums:
+            nums_joined = ", ".join(str(v) for v in valid_nums)
+            return f"{mm:02d}/{dd:02d} 핵심 아티클 ({nums_joined}주차)"
+        return f"{mm:02d}/{dd:02d} 핵심 아티클"
+
+    # Case 2: Verbose Core Article ("📚 26년 11월 16일 핵심 심화 아티클...")
     m_art = re.match(r"^[📚📰\s]*(\d{2})년\s*(\d{1,2})월\s*(\d{1,2})일\s*핵심.*?\((?:강의\s*)?([^)]+?)(?:\s*통합|\s*종합)?\)$", t)
     if m_art:
-        mm = int(m_art.group(2))
-        dd = int(m_art.group(3))
-        nums = m_art.group(4).strip()
-        return f"{mm:02d}/{dd:02d} 핵심 아티클 ({nums}주차)"
+        mm, dd = int(m_art.group(2)), int(m_art.group(3))
+        raw_nums = m_art.group(4)
+        valid_nums = sorted({int(x) for x in re.findall(r"\d+", raw_nums) if 1 <= int(x) <= 30})
+        if valid_nums:
+            return f"{mm:02d}/{dd:02d} 핵심 아티클 ({', '.join(str(v) for v in valid_nums)}주차)"
+        return f"{mm:02d}/{dd:02d} 핵심 아티클"
 
-    # Case 2: "📝 26년 10월 26일 강의2 — 10주차 - 제목"
+    # Case 3: Starts with MM/DD Lecture Note ("10/28 1주차 지역사회재활 1주차 - ..." or "11/24 261124주차 ...")
+    m_mmdd = re.match(r"^[📝📅\s]*(\d{1,2})/(\d{1,2})\s+(?:(\d+)\s*(?:주차|강)\s+)?(.*)$", t)
+    if m_mmdd:
+        mm, dd = int(m_mmdd.group(1)), int(m_mmdd.group(2))
+        wk_raw = m_mmdd.group(3) or ""
+        rest = m_mmdd.group(4).strip()
+        wk = wk_raw if (wk_raw and 1 <= int(wk_raw) <= 30) else ""
+        cleaned_body = strip_redundant_course_and_week_prefix(rest, course_name)
+        if wk:
+            return f"{mm:02d}/{dd:02d} {wk}주차 {cleaned_body}".strip()
+        return f"{mm:02d}/{dd:02d} {cleaned_body}".strip()
+
+    # Case 4: "📝 26년 10월 26일 강의2 — 10주차 - 제목"
     m_new = re.match(r"^[📝📅\s]*\d{2,4}년\s*(\d{1,2})월\s*(\d{1,2})일\s*강의(\d+)?\s*[-—|:]\s*(.*)$", t)
     if m_new:
-        mm = int(m_new.group(1))
-        dd = int(m_new.group(2))
+        mm, dd = int(m_new.group(1)), int(m_new.group(2))
         lec_num = m_new.group(3) or ""
-        rest = m_new.group(4).strip()
-        # Strip duplicate "10주차 -" if we already have lec_num, or use it if lec_num is missing
-        m_wk = re.match(r"^(\d+)\s*(?:주차|강)\s*[-—:]?\s*(.*)$", rest)
-        if m_wk:
-            if not lec_num:
-                lec_num = m_wk.group(1)
-            rest = m_wk.group(2).strip()
+        if lec_num and not (1 <= int(lec_num) <= 30):
+            lec_num = ""
+        rest = strip_redundant_course_and_week_prefix(m_new.group(4).strip(), course_name)
         week_str = f"{lec_num}주차 " if lec_num else ""
         return f"{mm:02d}/{dd:02d} {week_str}{rest}".strip()
 
-    # Case 3: "📅 2026-11-16 | [일상생활활동] 10주차 - 제목"
+    # Case 5: "📅 2026-11-16 | [일상생활활동] 10주차 - 제목"
     m_iso = re.match(r"^[📝📅\s]*20\d{2}-(\d{2})-(\d{2})\s*\|\s*\[[^\]]+\]\s*(.*)$", t)
     if m_iso:
         mm, dd, rest = m_iso.group(1), m_iso.group(2), m_iso.group(3).strip()
-        m_wk = re.match(r"^(\d+)\s*(?:주차|강)\s*[-—:]?\s*(.*)$", rest)
-        if m_wk:
-            return f"{mm}/{dd} {m_wk.group(1)}주차 {m_wk.group(2).strip()}"
-        return f"{mm}/{dd} {rest}"
+        m_wk = re.match(r"^(\d{1,2})\s*(?:주차|강)\s*[-—:]?\s*(.*)$", rest)
+        wk = m_wk.group(1) if (m_wk and 1 <= int(m_wk.group(1)) <= 30) else ""
+        cleaned_body = strip_redundant_course_and_week_prefix(rest, course_name)
+        if wk:
+            return f"{mm}/{dd} {wk}주차 {cleaned_body}"
+        return f"{mm}/{dd} {cleaned_body}"
 
     return None
 
@@ -1557,8 +1648,9 @@ def cleanup_and_rename_existing_notion_pages() -> None:
     """
     Scans all course folder subpages in Notion and:
     1. Archives old duplicate first-pass pages (starting with `[과목명] ...`)
-    2. Renames any verbose `📝 26년 00월 00일 강의N — ...` pages into the compact `00/00 0주차 제목` format!
-    3. Renames course folder titles from `📂 [일상생활활동] 강의 노트 폴더` to `[일상생활활동]` so they don't wrap on mobile.
+    2. Fixes titles like `261124주차` or duplicated `1주차 지역사회재활 1주차` into clean `00/00 0주차 제목`
+    3. Ensures Option 2 ordering: all 📝 Lecture Notes sorted chronologically at the top,
+       and all 📚 Core Articles sorted chronologically at the bottom!
     """
     token = os.environ.get("NOTION_TOKEN", "").strip()
     if not token:
@@ -1576,6 +1668,8 @@ def cleanup_and_rename_existing_notion_pages() -> None:
         "Notion-Version": "2022-06-28",
     }
 
+    state = load_state()
+
     try:
         blocks_resp = requests.get(
             f"https://api.notion.com/v1/blocks/{parent_page_id}/children?page_size=100",
@@ -1591,7 +1685,6 @@ def cleanup_and_rename_existing_notion_pages() -> None:
             folder_id = folder_blk["id"]
             folder_title = folder_blk.get("child_page", {}).get("title", "")
 
-            # Shorten folder title if it has "강의 노트 폴더"
             if "강의 노트 폴더" in folder_title:
                 clean_f_title = re.sub(r"^[📂📁\s]*", "", folder_title)
                 clean_f_title = clean_f_title.replace("강의 노트 폴더", "").strip()
@@ -1601,9 +1694,15 @@ def cleanup_and_rename_existing_notion_pages() -> None:
                     json={"properties": {"title": {"title": [{"text": {"content": clean_f_title}}]}}},
                     timeout=15,
                 )
-                print(f"[INFO] Renamed Notion course folder: {folder_title} -> {clean_f_title}")
+                folder_title = clean_f_title
 
-            # Inspect child lecture pages inside the course folder
+            course_name = folder_title.strip("[]📂📁 ")
+
+            # Lookup table from state for exact filename week numbers
+            state_course_lecs = [
+                l for l in state.get("lectures", []) if l.get("course_name") == course_name
+            ]
+
             sub_resp = requests.get(
                 f"https://api.notion.com/v1/blocks/{folder_id}/children?page_size=100",
                 headers=headers,
@@ -1614,13 +1713,12 @@ def cleanup_and_rename_existing_notion_pages() -> None:
 
             sub_pages = [b for b in sub_resp.json().get("results", []) if b.get("type") == "child_page"]
             seen_titles = set()
+            seen_article_weeks = set()
 
-            # Process newest first so we keep newer pages and archive older duplicates
             for blk in reversed(sub_pages):
                 p_id = blk["id"]
                 cp_title = blk.get("child_page", {}).get("title", "").strip()
 
-                # Archive old first-pass `[일상생활활동] ...` pages
                 if cp_title.startswith("["):
                     requests.patch(
                         f"https://api.notion.com/v1/pages/{p_id}",
@@ -1628,13 +1726,29 @@ def cleanup_and_rename_existing_notion_pages() -> None:
                         json={"archived": True},
                         timeout=15,
                     )
-                    print(f"[INFO] Archived legacy Notion page: {cp_title}")
                     continue
 
-                new_concise_title = format_concise_notion_title(cp_title)
+                new_concise_title = format_concise_notion_title(cp_title, course_name)
+
+                # Also match against state_course_lecs to fix wrong AI week numbers (e.g. 11/11 11주차 -> 11/11 5주차)
+                for sl in state_course_lecs:
+                    s_body = strip_redundant_course_and_week_prefix(sl.get("lecture_title", ""), course_name)
+                    if s_body and len(s_body) >= 6 and s_body[:12] in (new_concise_title or cp_title):
+                        new_concise_title = build_clean_lecture_page_title(
+                            rec_date_str=sl["recorded_date"],
+                            course_name=course_name,
+                            source_file=sl.get("source_file", ""),
+                            raw_lecture_title=sl["lecture_title"],
+                        )
+                        break
+
                 final_title = new_concise_title or cp_title
 
-                if final_title in seen_titles:
+                # Deduplicate core articles covering the exact same weeks (e.g. 11/25 핵심 아티클 (9, 10주차) vs 11/26 핵심 아티클 (9, 10주차))
+                m_art_wk = re.search(r"핵심\s*아티클\s*\(([^)]+)\)", final_title)
+                art_wk_key = m_art_wk.group(1).strip() if m_art_wk else None
+
+                if final_title in seen_titles or (art_wk_key and art_wk_key in seen_article_weeks):
                     requests.patch(
                         f"https://api.notion.com/v1/pages/{p_id}",
                         headers=headers,
@@ -1645,6 +1759,9 @@ def cleanup_and_rename_existing_notion_pages() -> None:
                     continue
 
                 seen_titles.add(final_title)
+                if art_wk_key:
+                    seen_article_weeks.add(art_wk_key)
+
                 if new_concise_title and new_concise_title != cp_title:
                     requests.patch(
                         f"https://api.notion.com/v1/pages/{p_id}",
@@ -1653,6 +1770,47 @@ def cleanup_and_rename_existing_notion_pages() -> None:
                         timeout=15,
                     )
                     print(f"[INFO] Renamed Notion page: {cp_title} -> {new_concise_title}")
+
+            # Enforce Option 2 physical ordering:
+            # All 📝 Lecture Notes on top (sorted by week/date), all 📚 Core Articles at the bottom (sorted by date).
+            # If any 📝 Lecture Note appears below a 📚 Core Article (or if articles are out of date order),
+            # regenerate the course folder's 📚 Core Articles cleanly at the bottom from `state_course_lecs`!
+            sub_resp2 = requests.get(
+                f"https://api.notion.com/v1/blocks/{folder_id}/children?page_size=100",
+                headers=headers,
+                timeout=20,
+            )
+            if sub_resp2.ok and state_course_lecs:
+                current_children = [b for b in sub_resp2.json().get("results", []) if b.get("type") == "child_page"]
+                seen_article = False
+                needs_article_move_to_bottom = False
+                for b in current_children:
+                    t_cur = b.get("child_page", {}).get("title", "")
+                    is_art = "핵심 아티클" in t_cur or "심화 아티클" in t_cur
+                    if is_art:
+                        seen_article = True
+                    elif seen_article and not is_art:
+                        # Found a 📝 Lecture Note positioned BELOW a 📚 Core Article!
+                        needs_article_move_to_bottom = True
+                        break
+
+                if needs_article_move_to_bottom:
+                    print(f"[INFO] Reordering [{course_name}] so all 📝 Lecture Notes are on top and 📚 Core Articles at bottom...")
+                    for b in current_children:
+                        t_cur = b.get("child_page", {}).get("title", "")
+                        if "핵심 아티클" in t_cur or "심화 아티클" in t_cur:
+                            requests.patch(
+                                f"https://api.notion.com/v1/pages/{b['id']}",
+                                headers=headers,
+                                json={"archived": True},
+                                timeout=15,
+                            )
+                    # Re-create 📚 Core Articles in chronological date order at the bottom
+                    by_date: Dict[str, List[Dict[str, Any]]] = {}
+                    for sl in state_course_lecs:
+                        by_date.setdefault(sl["recorded_date"], []).append(sl)
+                    for r_date in sorted(by_date.keys()):
+                        sync_daily_consolidated_article(course_name, r_date, by_date[r_date])
     except Exception as e:
         print(f"[WARN] cleanup_and_rename_existing_notion_pages error: {e}")
 

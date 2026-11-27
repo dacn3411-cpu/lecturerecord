@@ -123,5 +123,93 @@ class TestDriveState(unittest.TestCase):
         self.assertTrue(state["processed_drive_ids"]["x"]["done"])
 
 
+class TestNotionTitleFormatting(unittest.TestCase):
+    """Ensure Notion page titles strip duplicate course names, ignore 6-digit YYMMDD dates as week numbers, and format cleanly."""
+
+    def setUp(self):
+        from typing import Optional
+
+        ns = {
+            "re": re,
+            "Path": Path,
+            "datetime": datetime,
+            "Optional": Optional,
+            "OFFICIAL_COURSES": [
+                "감각과인지재활",
+                "명작의 탄생",
+                "삼킴재활",
+                "일상생활활동",
+                "아동운동재활학",
+                "장애아동진단 및 평가",
+                "지역사회재활",
+                "사례기반 정신사회작업치료학",
+            ],
+            "COURSE_ALIASES": {
+                "adl": "일상생활활동",
+                "지역사회": "지역사회재활",
+                "삼킴": "삼킴재활",
+                "아진": "장애아동진단 및 평가",
+            },
+        }
+        self.extract_num = _load_function(MAIN_SCRIPT, "extract_lecture_number_from_stem", ns)
+        self.strip_prefix = _load_function(MAIN_SCRIPT, "strip_redundant_course_and_week_prefix", ns)
+        self.build_title = _load_function(MAIN_SCRIPT, "build_clean_lecture_page_title", ns)
+        self.format_concise = _load_function(MAIN_SCRIPT, "format_concise_notion_title", ns)
+
+    def test_extract_lecture_number_ignores_yymmdd(self):
+        self.assertEqual(self.extract_num("2026-11-24_음성 261124_180737"), "")
+        self.assertEqual(self.extract_num("2026-10-28_지역사회재활 1"), "1")
+        self.assertEqual(self.extract_num("2026-11-11_지역사회 5"), "5")
+        self.assertEqual(self.extract_num("ADL 16"), "16")
+
+    def test_build_clean_lecture_page_title(self):
+        self.assertEqual(
+            self.build_title(
+                "2026-10-28",
+                "지역사회재활",
+                "recordings/2026-10-28_지역사회재활 1.m4a",
+                "지역사회재활 1주차 - 지역사회중심재활(CBR) 운영 예시",
+            ),
+            "10/28 1주차 지역사회중심재활(CBR) 운영 예시",
+        )
+        self.assertEqual(
+            self.build_title(
+                "2026-11-11",
+                "지역사회재활",
+                "recordings/2026-11-11_지역사회 5.m4a",
+                "11주차 - 지역사회 기반 작업치료 중재와 프로그램 운영 전략",
+            ),
+            "11/11 5주차 지역사회 기반 작업치료 중재와 프로그램 운영 전략",
+        )
+        self.assertEqual(
+            self.build_title(
+                "2026-11-24",
+                "지역사회재활",
+                "recordings/2026-11-24_음성 261124_180737.m4a",
+                "지역사회중심재활(CBR)과 사회적 처방(Social Prescribing)의 이해",
+            ),
+            "11/24 지역사회중심재활(CBR)과 사회적 처방(Social Prescribing)의 이해",
+        )
+
+    def test_format_concise_notion_title(self):
+        self.assertEqual(
+            self.format_concise("10/28 1주차 지역사회재활 1주차 - 지역사회중심재활(CBR)", "지역사회재활"),
+            "10/28 1주차 지역사회중심재활(CBR)",
+        )
+        self.assertEqual(
+            self.format_concise("11/24 261124주차 지역사회중심재활(CBR)과 사회적 처방", "지역사회재활"),
+            "11/24 지역사회중심재활(CBR)과 사회적 처방",
+        )
+        self.assertEqual(
+            self.format_concise("11/24 핵심 아티클 (261124, 261124주차)", "지역사회재활"),
+            "11/24 핵심 아티클",
+        )
+        self.assertEqual(
+            self.format_concise("11/26 핵심 아티클 (10, 9주차)", "지역사회재활"),
+            "11/26 핵심 아티클 (9, 10주차)",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
+
